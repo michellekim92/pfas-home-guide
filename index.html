@@ -15,6 +15,25 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <div class="site-shell">
+  <nav class="tab-bar" id="tab-bar" aria-label="Site navigation">
+    <div class="sidebar-brand">
+      <p class="sidebar-brand-title">PFAS Home Guide</p>
+      <p class="sidebar-brand-line">Where PFAS hide at home—and what to swap first</p>
+    </div>
+    <div class="tab-list">
+      <button class="tab active" data-nav="home" aria-label="Home">
+        <span class="tab-icon">◯</span><span>Home</span>
+      </button>
+      <button class="tab" data-nav="swaps" aria-label="Top swaps">
+        <span class="tab-icon">↑</span><span>Swaps</span>
+      </button>
+      <button class="tab" data-nav="shop" aria-label="Shop">
+        <span class="tab-icon">⌂</span><span>Shop</span>
+      </button>
+    </div>
+  </nav>
+
   <main id="app">
     <section id="view-home" class="view active">
       <header class="home-header">
@@ -69,18 +88,7 @@
       </div>
     </section>
   </main>
-
-  <nav class="tab-bar" id="tab-bar">
-    <button class="tab active" data-nav="home" aria-label="Home">
-      <span class="tab-icon">◯</span><span>Home</span>
-    </button>
-    <button class="tab" data-nav="swaps" aria-label="Top swaps">
-      <span class="tab-icon">↑</span><span>Swaps</span>
-    </button>
-    <button class="tab" data-nav="shop" aria-label="Shop">
-      <span class="tab-icon">⌂</span><span>Shop</span>
-    </button>
-  </nav>
+  </div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>

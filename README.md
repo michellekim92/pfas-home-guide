@@ -17,40 +17,40 @@ Double-click `Launch PFAS Home Guide.command` (or open `index.html` in this fold
 
 ## Deploy (HTTPS public URL)
 
-The site is a static folder—no build step. **GitHub Pages** gives a free stable HTTPS URL like `https://yourusername.github.io/pfas-home-guide/`.
+Static site—no build step. **Vercel** is a good fit: free HTTPS, a stable `*.vercel.app` URL, optional custom domain, and auto-deploy when connected to GitHub.
 
-### One-time setup
+### Option A — Vercel dashboard (recommended)
 
-1. **Create an empty repo** on GitHub (no README): [github.com/new?name=pfas-home-guide](https://github.com/new?name=pfas-home-guide)
-2. **Run the setup script** from this folder (it pushes `main`):
+1. Push this repo to GitHub (see `scripts/setup-github-pages.sh` if you haven’t yet).
+2. Go to [vercel.com/new](https://vercel.com/new) and **Import** your GitHub repo.
+3. Vercel should detect a static site. Use these settings if asked:
+   - **Framework Preset:** Other
+   - **Build Command:** leave empty
+   - **Output Directory:** leave empty (root)
+4. Click **Deploy**. Your live URL will look like:
 
-   ```bash
-   chmod +x scripts/setup-github-pages.sh
-   ./scripts/setup-github-pages.sh
-   ```
+   `https://pfas-home-guide.vercel.app`
 
-   Or manually:
+   (exact name depends on your project name on Vercel.)
 
-   ```bash
-   git remote add origin https://github.com/YOUR_USERNAME/pfas-home-guide.git
-   git push -u origin main
-   ```
+Future pushes to `main` redeploy automatically.
 
-3. **Enable Pages** — repo **Settings → Pages → Build and deployment → Source: GitHub Actions**
-4. Wait for the **Actions** tab workflow to finish (~1–2 min). Your URL is:
+### Option B — Vercel CLI from this folder
 
-   `https://YOUR_USERNAME.github.io/pfas-home-guide/`
+```bash
+chmod +x scripts/deploy-vercel.sh
+./scripts/deploy-vercel.sh
+```
 
-Pushes to `main` auto-deploy via `.github/workflows/deploy.yml`.
+First run opens a browser to log in. `--prod` publishes to your production URL. Use `./scripts/deploy-vercel.sh --preview` for a temporary preview link.
 
 ### Custom domain (optional)
 
-Buy a domain (e.g. `pfashomeguide.com`), then in **Settings → Pages → Custom domain** enter it and follow DNS instructions. Add a `CNAME` file in the repo root with that domain if GitHub prompts you.
+In the Vercel project → **Settings → Domains**, add e.g. `pfashomeguide.com` and follow the DNS steps. HTTPS is automatic.
 
-### Alternatives
+### GitHub Pages (alternative)
 
-- **Netlify** or **Cloudflare Pages** — connect the same repo; both offer free HTTPS and custom domains.
-- **Netlify Drop** — drag this folder onto [app.netlify.com/drop](https://app.netlify.com/drop) for a quick preview URL (less ideal as a permanent Associates URL).
+`.github/workflows/deploy.yml` can still publish to GitHub Pages if you prefer. Enable **Settings → Pages → Source: GitHub Actions** on the repo.
 
 ## Affiliate tag
 

@@ -867,6 +867,109 @@ body.detail-open .tab-bar { display: none; }
   font-style: italic;
 }
 
+.amazon-disclosure {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.shop-intro {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.shop-picks-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.45;
+  margin-bottom: 0.65rem;
+}
+
+/* Legal pages + site footer */
+.legal-page .legal-body {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.legal-page .legal-body p {
+  margin-bottom: 0.85rem;
+}
+
+.legal-page .legal-body a {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-back {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.site-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer {
+  flex-shrink: 0;
+  padding: 1rem 1.15rem 1.25rem;
+  border-top: 1px solid var(--border-strong);
+  background: var(--bg);
+  background-image: var(--paper-grain);
+  background-size: 300px 300px;
+}
+
+.site-footer-disclosure {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.site-footer-health {
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: var(--muted);
+  margin-bottom: 0.65rem;
+}
+
+.site-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+}
+
+.site-footer-link {
+  font-family: var(--font);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.site-footer-link:hover { color: var(--text); }
+
+.site-footer-sep {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
 /* Tablet: slightly wider centered column */
 @media (min-width: 520px) and (max-width: 899px) {
   #app {
@@ -976,12 +1079,22 @@ body.detail-open .tab-bar { display: none; }
     color: var(--accent-dark);
   }
 
+  .site-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 100dvh;
+  }
+
   #app {
     flex: 1 1 auto;
     max-width: none;
     min-width: 0;
-    min-height: 100dvh;
     box-shadow: none;
+  }
+
+  .site-footer {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .view-pad,

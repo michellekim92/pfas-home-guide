@@ -1,5 +1,13 @@
 const AMAZON_AFFILIATE_TAG = 'YOURTAG-20';
 
+/** Shown on the About page — set a real email before applying to Amazon Associates. */
+const SITE_CONTACT_EMAIL = '';
+
+const AMAZON_DISCLOSURE = 'As an Amazon Associate I earn from qualifying purchases.';
+
+const HEALTH_DISCLAIMER =
+  'Educational information only—not medical advice. PFAS exposure varies by person and product. Verify labels and consult a qualified professional for personal health decisions.';
+
 const IMG_FALLBACK_PRODUCT = 'images/product-placeholder.svg';
 
 function amazonAffiliateTag() {

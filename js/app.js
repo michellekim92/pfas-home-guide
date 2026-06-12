@@ -6,6 +6,8 @@
     hotspot: document.getElementById('view-hotspot'),
     swaps: document.getElementById('view-swaps'),
     shop: document.getElementById('view-shop'),
+    about: document.getElementById('view-about'),
+    privacy: document.getElementById('view-privacy'),
   };
 
   const hotspotContent = document.getElementById('hotspot-content');
@@ -29,9 +31,16 @@
     return `<span class="exposure-badge exposure-${exposure}" title="${esc(tier.hint)}">${esc(text)}</span>`;
   }
 
+  function affiliateFinePrint(extra = '') {
+    const tail = extra ? ` ${extra}` : '';
+    return `<p class="fine-print amazon-disclosure">${esc(AMAZON_DISCLOSURE)}${esc(tail)}</p>`;
+  }
+
   function navigate(name) {
     Object.entries(views).forEach(([k, el]) => el?.classList.toggle('active', k === name));
-    document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.nav === name));
+    document.querySelectorAll('.tab').forEach((t) => {
+      t.classList.toggle('active', t.dataset.nav === name);
+    });
     document.body.classList.toggle('detail-open', name === 'hotspot');
     if (name === 'swaps') renderSwaps();
     if (name === 'shop') renderShop();
@@ -231,7 +240,7 @@
       ${products.length ? `
         <section class="hotspot-section">
           <h3>Shop picks</h3>
-          <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.65rem;">PFA-free alternatives — verify labels before buying.</p>
+          <p class="shop-picks-note">PFA-free alternatives — verify labels before buying. ${esc(AMAZON_DISCLOSURE)}</p>
           ${products.map((p) => productCard(p)).join('')}
         </section>` : `
         <section class="hotspot-section">
@@ -245,7 +254,7 @@
         <button type="button" class="btn btn-ghost btn-block" data-nav="shop">Browse all products</button>
       </section>
 
-      <p class="fine-print">May earn from qualifying Amazon purchases.</p>`;
+      ${affiliateFinePrint('Verify labels before buying.')}`;
 
     document.getElementById('hotspot-back')?.addEventListener('click', () => navigate('home'));
   }
@@ -283,7 +292,7 @@
         <p>Ranked by PFAS exposure — highest impact first.</p>
       </div>
       <div class="swap-list">${swapHtml}</div>
-      <p class="fine-print">May earn from qualifying purchases. Verify labels before buying.</p>`;
+      ${affiliateFinePrint('Verify labels before buying.')}`;
 
     swapsContent.querySelectorAll('.swap-detail-btn').forEach((btn) => {
       btn.addEventListener('click', () => openHotspot(btn.dataset.room, btn.dataset.item));
@@ -304,6 +313,33 @@
             </a>`).join('')}
         </div>
       </section>`).join('');
+  }
+
+  function initSiteLegal() {
+    const footerAmazon = document.getElementById('footer-amazon-disclosure');
+    const footerHealth = document.getElementById('footer-health-disclaimer');
+    if (footerAmazon) footerAmazon.textContent = AMAZON_DISCLOSURE;
+    if (footerHealth) footerHealth.textContent = HEALTH_DISCLAIMER;
+
+    const shopIntro = document.getElementById('shop-intro');
+    if (shopIntro) {
+      shopIntro.textContent =
+        'Product links open Amazon.com. ' + AMAZON_DISCLOSURE + ' Always verify current product labels before buying.';
+    }
+
+    const email = (SITE_CONTACT_EMAIL || '').trim();
+    const aboutContact = document.getElementById('about-contact');
+    const privacyContact = document.getElementById('privacy-contact');
+    if (email && aboutContact) {
+      aboutContact.innerHTML = `<a href="mailto:${esc(email)}">${esc(email)}</a>`;
+    } else if (aboutContact) {
+      aboutContact.textContent = 'Set SITE_CONTACT_EMAIL in js/data.js';
+    }
+    if (email && privacyContact) {
+      privacyContact.innerHTML = `<a href="mailto:${esc(email)}">${esc(email)}</a>`;
+    } else if (privacyContact) {
+      privacyContact.textContent = 'Set SITE_CONTACT_EMAIL in js/data.js';
+    }
   }
 
   function initHome() {
@@ -331,6 +367,7 @@
     if (!opened) window.location.assign(href);
   });
 
+  initSiteLegal();
   initHome();
   renderShop();
 })();

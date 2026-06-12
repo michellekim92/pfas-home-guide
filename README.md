@@ -52,6 +52,15 @@ In the Vercel project → **Settings → Domains**, add e.g. `pfashomeguide.com`
 
 Enable **Settings → Pages → Deploy from branch → `main` / root** if you prefer GitHub hosting instead of Vercel.
 
+## Before Amazon Associates review
+
+In `js/data.js`, set:
+
+- `SITE_CONTACT_EMAIL` — your contact email (shown on About and Privacy)
+- `AMAZON_AFFILIATE_TAG` — your Associates tracking ID after approval
+
+The site includes Amazon disclosure, health disclaimer, About, and Privacy pages in the footer.
+
 ## Affiliate tag
 
 Edit `AMAZON_AFFILIATE_TAG` in `js/data.js` with your real Amazon Associates ID (e.g. `yourname-20`).

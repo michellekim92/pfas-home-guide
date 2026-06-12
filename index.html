@@ -34,6 +34,7 @@
     </div>
   </nav>
 
+  <div class="site-main">
   <main id="app">
     <section id="view-home" class="view active">
       <header class="home-header">
@@ -83,11 +84,57 @@
           <h2>All swaps</h2>
           <p>PFA-free picks · Amazon links</p>
         </div>
+        <p class="shop-intro" id="shop-intro"></p>
         <div id="shop-container"></div>
-        <p class="fine-print">May earn from qualifying purchases. Verify labels before buying.</p>
+      </div>
+    </section>
+
+    <section id="view-about" class="view">
+      <div class="view-pad legal-page">
+        <div class="view-top">
+          <h2>About</h2>
+          <p>What this guide is and how to use it</p>
+        </div>
+        <div class="legal-body">
+          <p><strong>PFAS Home Guide</strong> is a free reference for finding where PFAS (“forever chemicals”) commonly show up at home and which everyday product swaps may reduce exposure.</p>
+          <p>Content is organized by room, ranked by likely exposure, and paired with practical alternatives. Product links point to Amazon when we have a specific pick; we do not sell products directly and do not require signup.</p>
+          <p>Picks favor publicly marketed PFA-free or lower-PFAS options, but labels change. Always verify current product claims before you buy.</p>
+          <p id="about-contact-wrap"><strong>Contact:</strong> <span id="about-contact">—</span></p>
+        </div>
+        <button type="button" class="btn btn-ghost legal-back" data-nav="home">← Back to home</button>
+      </div>
+    </section>
+
+    <section id="view-privacy" class="view">
+      <div class="view-pad legal-page">
+        <div class="view-top">
+          <h2>Privacy</h2>
+          <p>How this site handles your information</p>
+        </div>
+        <div class="legal-body">
+          <p><strong>No account required.</strong> PFAS Home Guide does not offer logins, forms that collect personal information, or a comment system.</p>
+          <p><strong>Data we do not collect on this site:</strong> we do not intentionally collect names, emails, addresses, or payment information through this guide.</p>
+          <p><strong>Amazon links:</strong> product links open Amazon.com in a new tab. Amazon’s own privacy policy applies once you leave this site. If you use affiliate links, Amazon may associate your visit with our Associates tracking ID.</p>
+          <p><strong>Hosting:</strong> the site is hosted on Vercel. The host may process standard server logs (such as IP address and browser type) as described in Vercel’s privacy policy.</p>
+          <p><strong>Local storage:</strong> this guide does not use cookies or local storage for tracking. If that changes, this page will be updated.</p>
+          <p><strong>Updates:</strong> this policy may change as the site evolves. Last updated: June 2026.</p>
+          <p id="privacy-contact-wrap"><strong>Questions:</strong> <span id="privacy-contact">—</span></p>
+        </div>
+        <button type="button" class="btn btn-ghost legal-back" data-nav="home">← Back to home</button>
       </div>
     </section>
   </main>
+
+  <footer class="site-footer" id="site-footer">
+    <p class="site-footer-disclosure" id="footer-amazon-disclosure"></p>
+    <p class="site-footer-health" id="footer-health-disclaimer"></p>
+    <nav class="site-footer-nav" aria-label="Legal">
+      <button type="button" class="site-footer-link" data-nav="about">About</button>
+      <span class="site-footer-sep" aria-hidden="true">·</span>
+      <button type="button" class="site-footer-link" data-nav="privacy">Privacy</button>
+    </nav>
+  </footer>
+  </div>
   </div>
 
   <script src="js/data.js"></script>

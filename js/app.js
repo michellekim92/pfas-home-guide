@@ -282,7 +282,7 @@
         <h2>Top ${entries.length} swaps</h2>
         <p>Ranked by PFAS exposure — highest impact first.</p>
       </div>
-      ${swapHtml}
+      <div class="swap-list">${swapHtml}</div>
       <p class="fine-print">May earn from qualifying purchases. Verify labels before buying.</p>`;
 
     swapsContent.querySelectorAll('.swap-detail-btn').forEach((btn) => {

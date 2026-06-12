@@ -50,7 +50,7 @@ In the Vercel project → **Settings → Domains**, add e.g. `pfashomeguide.com`
 
 ### GitHub Pages (alternative)
 
-`.github/workflows/deploy.yml` can still publish to GitHub Pages if you prefer. Enable **Settings → Pages → Source: GitHub Actions** on the repo.
+Enable **Settings → Pages → Deploy from branch → `main` / root** if you prefer GitHub hosting instead of Vercel.
 
 ## Affiliate tag
 

@@ -1,7 +1,7 @@
 const AMAZON_AFFILIATE_TAG = 'YOURTAG-20';
 
 /** Shown on the About page — set a real email before applying to Amazon Associates. */
-const SITE_CONTACT_EMAIL = '';
+const SITE_CONTACT_EMAIL = 'pfashomeguide@gmail.com';
 
 const AMAZON_DISCLOSURE = 'As an Amazon Associate I earn from qualifying purchases.';
 

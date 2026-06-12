@@ -901,27 +901,32 @@ body.detail-open .tab-bar { display: none; }
   }
 
   .site-shell {
-    display: grid;
-    grid-template-areas: "nav main";
-    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
     width: 100%;
     min-height: 100dvh;
     background: var(--bg);
   }
 
   .tab-bar {
-    grid-area: nav;
-    position: sticky;
-    top: 0;
-    align-self: start;
-    width: var(--sidebar-w);
-    height: 100dvh;
-    max-width: none;
+    position: relative;
+    top: auto;
+    bottom: auto;
     left: auto;
     right: auto;
     transform: none;
+    flex: 0 0 var(--sidebar-w);
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    max-width: var(--sidebar-w);
+    height: auto;
+    min-height: 100dvh;
+    max-height: none;
+    z-index: 1;
     flex-direction: column;
     align-items: stretch;
+    align-self: stretch;
     border-top: none;
     border-right: 1px solid var(--border-strong);
     padding: 1.5rem 0 1.25rem;
@@ -972,12 +977,11 @@ body.detail-open .tab-bar { display: none; }
   }
 
   #app {
-    grid-area: main;
+    flex: 1 1 auto;
     max-width: none;
-    min-height: 100dvh;
     min-width: 0;
+    min-height: 100dvh;
     box-shadow: none;
-    border-left: 1px solid var(--border);
   }
 
   .view-pad,

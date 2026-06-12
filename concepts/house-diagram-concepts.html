@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 House Hotspot Diagram Concepts</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #e8ece9;
+      color: #1a2e28;
+      padding: 1rem;
+    }
+    header { text-align: center; max-width: 560px; margin: 0 auto 1rem; }
+    header h1 { font-family: 'Fraunces', serif; font-size: 1.4rem; }
+    header p { font-size: 0.88rem; color: #5c7268; margin-top: 0.35rem; }
+    .tabs {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .tabs button {
+      font: 600 0.75rem 'DM Sans', sans-serif;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 2px solid #dce8e2;
+      background: white;
+      cursor: pointer;
+    }
+    .tabs button.active { background: #2d8a5e; color: white; border-color: #2d8a5e; }
+    .phone-wrap { display: flex; justify-content: center; }
+    .phone {
+      width: 100%; max-width: 360px;
+      background: #1a1a1a;
+      border-radius: 32px;
+      padding: 10px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    }
+    .screen {
+      background: #f8faf9;
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 520px;
+    }
+    .screen-inner { padding: 1rem; }
+    .screen h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+    .hint { font-size: 0.75rem; color: #5c7268; margin-bottom: 0.75rem; }
+    .concept { display: none; }
+    .concept.active { display: block; }
+    .label-outside {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #5c7268;
+      margin: 0.5rem auto 1rem;
+      max-width: 360px;
+    }
+    .label-outside strong { color: #1a2e28; }
+
+    /* Shared diagram card */
+    .diag-card {
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 16px;
+      padding: 0.75rem;
+    }
+
+    /* 1 — Floor plan (current) */
+    .c1 svg { width: 100%; height: auto; }
+    .c1 .room-fill { fill: #e8f6ee; stroke: #b8dfc9; stroke-width: 2; }
+    .c1 .room-label { font: 700 11px 'DM Sans', sans-serif; fill: #1a2e28; }
+    .c1 .pin { fill: white; stroke: #2d8a5e; stroke-width: 1.5; }
+
+    /* 2 — Isometric house */
+    .iso-house { position: relative; height: 280px; }
+    .iso-house svg { width: 100%; height: 100%; }
+    .iso-tag {
+      position: absolute;
+      background: white;
+      border: 1px solid #dce8e2;
+      border-radius: 10px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      max-width: 90px;
+      line-height: 1.2;
+    }
+    .iso-tag span { font-size: 0.9rem; display: block; margin-bottom: 0.1rem; }
+
+    /* 3 — Illustrated house + callouts */
+    .illus-wrap { text-align: center; padding: 0.5rem 0; }
+    .illus-house {
+      width: 140px; margin: 0 auto;
+      position: relative;
+    }
+    .illus-svg { width: 100%; }
+    .callout {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.4rem 0;
+      font-size: 0.72rem;
+      text-align: left;
+    }
+    .callout .dot {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #d8f0e4;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .callout strong { display: block; font-size: 0.75rem; }
+
+    /* 4 — Room cards stack */
+    .room-stack { display: flex; flex-direction: column; gap: 0.45rem; }
+    .room-card {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem;
+      border-radius: 12px;
+      border: 1px solid #dce8e2;
+      background: #f8faf9;
+    }
+    .room-card.critical { border-color: #f0c4c0; background: #fdeeed; }
+    .room-card .icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem;
+      border: 1px solid #dce8e2;
+    }
+    .room-card strong { font-size: 0.82rem; display: block; }
+    .room-card small { font-size: 0.68rem; color: #5c7268; }
+    .room-card .badge {
+      margin-left: auto;
+      font-size: 0.6rem;
+      font-weight: 700;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      background: #d8f0e4;
+      color: #1f6b47;
+    }
+    .room-card.critical .badge { background: #fdeeed; color: #c4453c; }
+
+    /* 5 — Radial hub */
+    .radial {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    .radial-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: #2d8a5e;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fraunces', serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.2;
+      z-index: 2;
+    }
+    .radial-orbit {
+      position: absolute;
+      width: 76px;
+      text-align: center;
+      font-size: 0.62rem;
+      font-weight: 600;
+    }
+    .radial-orbit .orb {
+      width: 52px; height: 52px;
+      margin: 0 auto 0.25rem;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #b8dfc9;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .radial-line {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 42%;
+      height: 1px;
+      background: #c5ddd0;
+      transform-origin: left center;
+      z-index: 0;
+    }
+
+    @media (min-width: 900px) {
+      .tabs, #single-label { display: none; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      #single-view { display: none; }
+    }
+    @media (max-width: 899px) {
+      .grid { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>5 house hotspot diagrams</h1>
+    <p>Tap tabs on mobile · all five on desktop</p>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="active" data-c="1">1 · Floor plan</button>
+    <button data-c="2">2 · Isometric</button>
+    <button data-c="3">3 · Callouts</button>
+    <button data-c="4">4 · Room cards</button>
+    <button data-c="5">5 · Radial hub</button>
+  </nav>
+
+  <p class="label-outside" id="single-label"><strong>1 · Floor plan</strong> — grid layout, tap rooms (current app style)</p>
+
+  <div id="single-view" class="phone-wrap">
+    <div class="phone">
+      <div class="screen" id="screen"></div>
+    </div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const labels = {
+      1: '<strong>1 · Floor plan</strong> — grid layout, tap rooms (current app style)',
+      2: '<strong>2 · Isometric</strong> — 3D-style house with floating labels',
+      3: '<strong>3 · Callout list</strong> — simple house icon + scannable room rows',
+      4: '<strong>4 · Room cards</strong> — no diagram; stacked cards with severity badges',
+      5: '<strong>5 · Radial hub</strong> — PFAS at center, rooms orbit around it',
+    };
+
+    const concepts = {
+      1: `
+        <div class="screen-inner c1">
+          <h2>PFAS hotspots in your home</h2>
+          <p class="hint">Tap a room</p>
+          <div class="diag-card">
+            <svg viewBox="0 0 300 280">
+              <rect x="8" y="8" width="284" height="264" rx="6" fill="#f0f7f4" stroke="#c5ddd0"/>
+              <rect x="14" y="14" width="272" height="110" rx="6" class="room-fill"/>
+              <text x="150" y="38" class="room-label" text-anchor="middle">Bedroom</text>
+              <text x="150" y="52" class="room-label" fill="#5c7268" font-size="9" text-anchor="middle">sheets · air</text>
+              <circle cx="50" cy="80" r="12" class="pin"/><text x="50" y="84" font-size="10" text-anchor="middle">🛏️</text>
+              <circle cx="150" cy="80" r="12" class="pin"/><text x="150" y="84" font-size="10" text-anchor="middle">🌬️</text>
+              <rect x="14" y="108" width="130" height="90" rx="6" class="room-fill"/>
+              <text x="74" y="128" class="room-label" text-anchor="middle">Bathroom</text>
+              <circle cx="45" cy="155" r="10" class="pin"/><text x="45" y="159" font-size="9" text-anchor="middle">🧴</text>
+              <circle cx="95" cy="155" r="10" class="pin"/><text x="95" y="159" font-size="9" text-anchor="middle">🧹</text>
+              <rect x="158" y="108" width="124" height="90" rx="6" class="room-fill"/>
+              <text x="220" y="128" class="room-label" text-anchor="middle">Kitchen</text>
+              <circle cx="190" cy="155" r="10" class="pin"/><text x="190" y="159" font-size="9" text-anchor="middle">💧</text>
+              <circle cx="235" cy="155" r="10" class="pin"/><text x="235" y="159" font-size="9" text-anchor="middle">🍳</text>
+              <rect x="14" y="202" width="272" height="72" rx="6" class="room-fill"/>
+              <text x="150" y="222" class="room-label" text-anchor="middle">Wardrobe</text>
+              <circle cx="80" cy="248" r="10" class="pin"/><text x="80" y="252" font-size="9" text-anchor="middle">👙</text>
+              <circle cx="220" cy="248" r="10" class="pin"/><text x="220" y="252" font-size="9" text-anchor="middle">🏃</text>
+            </svg>
+          </div>
+        </div>`,
+
+      2: `
+        <div class="screen-inner">
+          <h2>PFAS hotspots in your home</h2>
+          <p class="hint">Labels float on a 3D-style house</p>
+          <div class="diag-card iso-house">
+            <svg viewBox="0 0 320 260">
+              <polygon points="160,20 300,100 300,240 20,240 20,100" fill="#e8f6ee" stroke="#b8dfc9" stroke-width="2"/>
+              <polygon points="160,20 300,100 160,100" fill="#d4f0e0" stroke="#b8dfc9" stroke-width="1.5"/>
+              <polygon points="160,20 20,100 160,100" fill="#c5e8d4" stroke="#b8dfc9" stroke-width="1.5"/>
+              <line x1="160" y1="100" x2="160" y2="240" stroke="#b8dfc9" stroke-width="2"/>
+              <line x1="90" y1="100" x2="90" y2="240" stroke="#b8dfc9" stroke-width="1.5"/>
+              <line x1="230" y1="100" x2="230" y2="240" stroke="#b8dfc9" stroke-width="1.5"/>
+              <line x1="20" y1="170" x2="300" y2="170" stroke="#b8dfc9" stroke-width="1.5"/>
+              <text x="125" y="140" font-size="10" font-weight="700" fill="#1a2e28">Bath</text>
+              <text x="195" y="140" font-size="10" font-weight="700" fill="#1a2e28">Kitchen</text>
+              <text x="125" y="210" font-size="10" font-weight="700" fill="#1a2e28">Closet</text>
+              <text x="195" y="210" font-size="10" font-weight="700" fill="#1a2e28">Laundry</text>
+              <text x="125" y="75" font-size="10" font-weight="700" fill="#1a2e28">Bedroom</text>
+            </svg>
+            <div class="iso-tag" style="top:8%; left:5%;"><span>🛏️</span>Bed sheets</div>
+            <div class="iso-tag" style="top:35%; left:2%;"><span>🧴</span>Skincare</div>
+            <div class="iso-tag" style="top:35%; right:2%;"><span>🍳</span>Non-stick</div>
+            <div class="iso-tag" style="bottom:12%; left:8%;"><span>👙</span>Underwear</div>
+            <div class="iso-tag" style="bottom:12%; right:5%;"><span>💧</span>Water filter</div>
+          </div>
+        </div>`,
+
+      3: `
+        <div class="screen-inner">
+          <h2>PFAS hotspots in your home</h2>
+          <p class="hint">House icon + room breakdown</p>
+          <div class="diag-card illus-wrap">
+            <div class="illus-house">
+              <svg class="illus-svg" viewBox="0 0 120 100">
+                <polygon points="60,8 110,45 110,92 10,92 10,45" fill="#d8f0e4" stroke="#2d8a5e" stroke-width="2"/>
+                <rect x="35" y="55" width="20" height="25" fill="#2d8a5e" rx="2"/>
+                <rect x="70" y="50" width="18" height="18" fill="#a8d4bc" stroke="#2d8a5e"/>
+                <circle cx="60" cy="30" r="8" fill="#fdeeed" stroke="#c4453c" stroke-width="1.5"/>
+                <text x="60" y="33" font-size="8" text-anchor="middle">!</text>
+              </svg>
+            </div>
+          </div>
+          <div class="callout"><div class="dot">🛏️</div><div><strong>Bedroom</strong>Sheets, air purifier, mattress pads</div></div>
+          <div class="callout"><div class="dot">🧴</div><div><strong>Bathroom</strong>Skincare, cleaners, toilet paper, floss</div></div>
+          <div class="callout"><div class="dot">🍳</div><div><strong>Kitchen</strong>Tap water, pans, cans, bottle seals</div></div>
+          <div class="callout"><div class="dot">👕</div><div><strong>Wardrobe</strong>Cotton underwear, athletic synthetics</div></div>
+        </div>`,
+
+      4: `
+        <div class="screen-inner">
+          <h2>PFAS hotspots in your home</h2>
+          <p class="hint">Ranked room cards — no floor plan</p>
+          <div class="room-stack">
+            <div class="room-card critical">
+              <div class="icon">🍳</div>
+              <div><strong>Kitchen</strong><small>Water · pans · cans · bottles</small></div>
+              <span class="badge">High</span>
+            </div>
+            <div class="room-card critical">
+              <div class="icon">🧴</div>
+              <div><strong>Bathroom</strong><small>Skincare · sprays · toilet paper</small></div>
+              <span class="badge">High</span>
+            </div>
+            <div class="room-card">
+              <div class="icon">🛏️</div>
+              <div><strong>Bedroom</strong><small>Sheets · HVAC dust · air quality</small></div>
+              <span class="badge">Med</span>
+            </div>
+            <div class="room-card">
+              <div class="icon">👕</div>
+              <div><strong>Wardrobe</strong><small>Underwear · workout gear · DWR coats</small></div>
+              <span class="badge">Med</span>
+            </div>
+          </div>
+        </div>`,
+
+      5: `
+        <div class="screen-inner">
+          <h2>PFAS hotspots in your home</h2>
+          <p class="hint">Rooms orbit a central hub</p>
+          <div class="diag-card">
+            <div class="radial">
+              <div class="radial-line" style="transform: rotate(-90deg)"></div>
+              <div class="radial-line" style="transform: rotate(0deg)"></div>
+              <div class="radial-line" style="transform: rotate(90deg)"></div>
+              <div class="radial-line" style="transform: rotate(180deg)"></div>
+              <div class="radial-center">PFAS<br>hotspots</div>
+              <div class="radial-orbit" style="top:2%; left:50%; transform:translateX(-50%);">
+                <div class="orb">🛏️</div>Bedroom
+              </div>
+              <div class="radial-orbit" style="top:50%; right:0; transform:translateY(-50%);">
+                <div class="orb">🍳</div>Kitchen
+              </div>
+              <div class="radial-orbit" style="bottom:2%; left:50%; transform:translateX(-50%);">
+                <div class="orb">👕</div>Wardrobe
+              </div>
+              <div class="radial-orbit" style="top:50%; left:0; transform:translateY(-50%);">
+                <div class="orb">🧴</div>Bath
+              </div>
+            </div>
+          </div>
+        </div>`,
+    };
+
+    function show(n) {
+      document.getElementById('screen').innerHTML = concepts[n];
+      document.getElementById('single-label').innerHTML = labels[n];
+      document.querySelectorAll('.tabs button').forEach(b =>
+        b.classList.toggle('active', b.dataset.c === n));
+    }
+
+    document.getElementById('tabs').addEventListener('click', e => {
+      if (e.target.dataset.c) show(e.target.dataset.c);
+    });
+
+    if (window.innerWidth >= 900) {
+      const grid = document.getElementById('grid');
+      Object.keys(concepts).forEach(n => {
+        grid.innerHTML += `
+          <div>
+            <p class="label-outside">${labels[n]}</p>
+            <div class="phone-wrap"><div class="phone"><div class="screen">${concepts[n]}</div></div></div>
+          </div>`;
+      });
+    } else {
+      show('1');
+    }
+  </script>
+</body>
+</html>

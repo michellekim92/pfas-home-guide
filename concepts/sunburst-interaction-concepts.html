@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 Sunburst Interaction Concepts — Interactive</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: #e8e4dc;
+      color: #1a2e28;
+      padding: 1rem;
+    }
+    header { text-align: center; max-width: 640px; margin: 0 auto 1rem; }
+    header h1 { font-family: 'Fraunces', serif; font-size: 1.4rem; }
+    header p { font-size: 0.85rem; color: #5c7268; margin-top: 0.4rem; line-height: 1.45; }
+    .live-banner {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #2d8a5e;
+      margin-bottom: 0.75rem;
+    }
+    .tabs {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: center;
+      margin-bottom: 1rem;
+    }
+    .tabs button {
+      font: 600 0.72rem 'DM Sans', sans-serif;
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      border: 2px solid #d5cdc2;
+      background: #faf8f4;
+      cursor: pointer;
+      color: #4a5c54;
+    }
+    .tabs button.active { background: #4a5c54; color: #faf8f4; border-color: #4a5c54; }
+    .phone-wrap { display: flex; justify-content: center; }
+    .phone {
+      width: 100%; max-width: 380px;
+      background: #2a2a2a;
+      border-radius: 32px;
+      padding: 10px;
+      box-shadow: 0 24px 56px rgba(0,0,0,0.2);
+    }
+    .screen {
+      background: #f8faf9;
+      border-radius: 24px;
+      overflow: hidden;
+      min-height: 600px;
+    }
+    .screen-inner { padding: 0.85rem; }
+    .concept { display: none; }
+    .concept.active { display: block; }
+    .screen h2 {
+      font-family: 'Fraunces', serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.15rem;
+    }
+    .hint { font-size: 0.72rem; color: #5c7268; margin-bottom: 0.65rem; }
+    .out-label {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #5c7268;
+      margin: 0.5rem auto 1rem;
+      max-width: 380px;
+      line-height: 1.45;
+    }
+    .out-label strong { color: #1a2e28; }
+    .panel {
+      background: #faf8f4;
+      border: 1px solid #e8e2d8;
+      border-radius: 18px;
+      padding: 0.65rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #8a8076;
+      margin-bottom: 0.35rem;
+    }
+    .pros { font-size: 0.72rem; color: #5c7268; margin-top: 0.5rem; line-height: 1.4; }
+    .pros span { color: #2d8a5e; font-weight: 600; }
+
+    .chart-wrap { position: relative; max-width: 280px; margin: 0 auto; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; }
+    .chart-wrap.small { max-width: 120px; }
+
+    .sunburst-seg {
+      cursor: pointer;
+      stroke: #faf8f4;
+      stroke-width: 2.5;
+      transition: opacity 0.2s, filter 0.2s;
+    }
+    .sunburst-seg:hover { filter: brightness(0.95); }
+    .sunburst-seg.is-dim { opacity: 0.35; }
+    .sunburst-seg.is-active { filter: brightness(0.88); opacity: 1; }
+    .sunburst-seg.no-pointer { cursor: default; pointer-events: none; }
+
+    .hub-copy {
+      text-align: center;
+      padding: 0.45rem 0.25rem 0.25rem;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+    .hub-copy h3 { font-family: 'Fraunces', serif; font-size: 0.85rem; }
+    .hub-copy p { font-size: 0.68rem; color: #5c7268; line-height: 1.35; margin-top: 0.2rem; }
+
+    .breadcrumb {
+      font-size: 0.72rem;
+      color: #8a8076;
+      margin-bottom: 0.5rem;
+    }
+    .breadcrumb button {
+      background: none; border: none; font: inherit;
+      color: #4a5c54; cursor: pointer; text-decoration: underline;
+      padding: 0;
+    }
+
+    .callout-box {
+      background: white;
+      border: 1px solid #e0d8cc;
+      border-radius: 10px;
+      padding: 0.5rem 0.6rem;
+      font-size: 0.7rem;
+      line-height: 1.35;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .callout-box strong { display: block; font-size: 0.75rem; margin-bottom: 0.15rem; }
+
+    .accordion-item { border-bottom: 1px solid #e8e2d8; }
+    .accordion-item:last-child { border-bottom: none; }
+    .acc-head {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 0.35rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      user-select: none;
+    }
+    .acc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .acc-chevron { margin-left: auto; font-size: 0.65rem; color: #8a8076; }
+    .acc-body { padding: 0 0.35rem 0.55rem 1.35rem; }
+    .acc-chip {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: white;
+      border: 1px solid #e4ddd2;
+      border-radius: 8px;
+      padding: 0.4rem 0.55rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .acc-chip:hover { border-color: #c4b8a8; }
+    .acc-chip.sel { border-color: var(--c, #9cb8c9); background: #f9f6f2; }
+    .acc-chip small { display: block; color: #5c7268; font-size: 0.65rem; margin-top: 0.15rem; }
+
+    .step-bar { display: flex; gap: 0.35rem; margin-bottom: 0.6rem; }
+    .step-pill {
+      flex: 1; text-align: center;
+      font-size: 0.68rem; font-weight: 600;
+      padding: 0.35rem; border-radius: 8px;
+      background: #eee9e0; color: #8a8076;
+    }
+    .step-pill.done { background: #4a5c54; color: #faf8f4; }
+    .step-pill.current { background: white; border: 2px solid #4a5c54; color: #1a2e28; }
+
+    .room-pills { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.5rem; }
+    .room-pill {
+      font-size: 0.68rem; padding: 0.3rem 0.55rem;
+      border-radius: 999px; border: none;
+      background: #eee9e0; color: #4a5c54;
+      font-weight: 600; cursor: pointer;
+    }
+    .room-pill.sel { color: white; }
+
+    .item-card {
+      background: white;
+      border: 1px solid #e0d8cc;
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      border-left-width: 3px;
+    }
+    .item-card strong { display: block; font-size: 0.8rem; margin-bottom: 0.2rem; }
+    .item-card p { font-size: 0.72rem; color: #5c7268; line-height: 1.4; }
+
+    .item-nav {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.75rem; margin-top: 0.5rem;
+    }
+    .item-nav button {
+      font-size: 0.68rem; padding: 0.3rem 0.6rem;
+      border: 1px solid #d5cdc2; background: white;
+      border-radius: 8px; cursor: pointer;
+    }
+    .item-nav span { font-size: 0.65rem; color: #8a8076; }
+
+    .passive-note {
+      font-size: 0.65rem; text-align: center;
+      color: #8a8076; font-style: italic; margin-top: 0.35rem;
+    }
+
+    .pulse-hint {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.35rem; font-size: 0.68rem;
+      color: #c47a20; margin-top: 0.4rem; font-weight: 600;
+    }
+    .pulse-hint.hidden { display: none; }
+    .pulse-ring {
+      width: 14px; height: 14px;
+      border: 2px solid #c47a20;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.15); opacity: 0.6; }
+    }
+
+    .outer-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 7px;
+      font-weight: 600;
+      fill: #4a5c54;
+      pointer-events: none;
+    }
+    .outer-label.is-active { fill: #1a2e28; font-weight: 700; }
+    .outer-label.is-dim { opacity: 0.35; }
+
+    .center-title, .center-sub {
+      text-anchor: middle;
+      fill: #4a5c54;
+      font-family: 'Fraunces', Georgia, serif;
+    }
+    .center-title { font-size: 10px; }
+    .center-sub { font-size: 12px; font-weight: 600; }
+    .center-hub { fill: #faf8f4; stroke: #d5cdc2; stroke-width: 1; }
+    .hub-detail-title {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 9px;
+      font-weight: 600;
+      fill: #1a2e28;
+      text-anchor: middle;
+    }
+    .hub-detail-body {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 7px;
+      fill: #5c7268;
+      text-anchor: middle;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sunburst interaction concepts</h1>
+    <p>Tap through each prototype below — all interactions are live.</p>
+  </header>
+  <p class="live-banner">● Interactive prototypes — click rooms, slices, list items, and pills</p>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen">
+        <div class="screen-inner" id="concepts"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="out-label" id="out-label"></p>
+
+  <script>
+    const ROOMS = [
+      { id: 'kitchen', label: 'Kitchen', color: '#9cb8c9', colorLight: '#c5d8e6',
+        items: [
+          { id: 'tap', label: 'Tap water', detail: 'Drinking and cooking water — a daily exposure route.' },
+          { id: 'pans', label: 'Non-stick pans', detail: 'Scratched coatings release PFAS directly into food.' },
+          { id: 'cans', label: 'Canned food', detail: 'Epoxy can liners — acidic foods leach more.' },
+          { id: 'bottles', label: 'Bottle seals', detail: 'Cap liners on sparkling drinks and plastic bottles.' },
+          { id: 'plastic', label: 'Heated plastic', detail: 'Microwave plastic containers and wrap.' },
+        ]},
+      { id: 'bathroom', label: 'Bathroom', color: '#c4a88c', colorLight: '#e2d4c3',
+        items: [
+          { id: 'skin', label: 'Skincare', detail: 'Makeup, sunscreen, lotions — daily skin contact.' },
+          { id: 'clean', label: 'Cleaners', detail: 'Sprays and toilet bowl treatments.' },
+          { id: 'tp', label: 'Toilet paper', detail: 'Some brands use PFAS for wet strength.' },
+          { id: 'floss', label: 'Dental floss', detail: 'Many conventional flosses are PFAS-coated.' },
+        ]},
+      { id: 'bedroom', label: 'Bedroom', color: '#8fae9e', colorLight: '#bdd4c8',
+        items: [
+          { id: 'sheets', label: 'Bed sheets', detail: 'Stain- and wrinkle-resistant fabric treatments.' },
+          { id: 'air', label: 'Air quality', detail: 'HVAC dust and bedroom air purifier filters.' },
+          { id: 'mattress', label: 'Mattress pads', detail: 'Waterproof protectors and treated linens.' },
+        ]},
+      { id: 'wardrobe', label: 'Wardrobe', color: '#b5a88a', colorLight: '#d9cfba',
+        items: [
+          { id: 'under', label: 'Underwear', detail: 'Synthetic blends sit against skin all day.' },
+          { id: 'athletic', label: 'Workout gear', detail: 'Moisture-wicking synthetics + sweat.' },
+          { id: 'outer', label: 'Rain jackets', detail: 'DWR waterproof and stain-resistant coatings.' },
+        ]},
+    ];
+
+    const CFG = { size: 280, cx: 140, cy: 140, rInner: 34, rRoom: 82, rOuter: 124, padDeg: 1.6 };
+
+    function polar(cx, cy, r, deg) {
+      const rad = (deg * Math.PI) / 180;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function arcPath(cx, cy, r0, r1, a0, a1) {
+      const span = a1 - a0;
+      if (span >= 360) a1 = a0 + 359.98;
+      const p0 = polar(cx, cy, r1, a1);
+      const p1 = polar(cx, cy, r1, a0);
+      const p2 = polar(cx, cy, r0, a0);
+      const p3 = polar(cx, cy, r0, a1);
+      const large = span <= 180 ? 0 : 1;
+      return ['M', p0.x, p0.y, 'A', r1, r1, 0, large, 0, p1.x, p1.y,
+        'L', p2.x, p2.y, 'A', r0, r0, 0, large, 1, p3.x, p3.y, 'Z'].join(' ');
+    }
+
+    function midAngle(a0, a1) { return (a0 + a1) / 2; }
+
+    function buildRoomSegments(rooms) {
+      const n = rooms.length;
+      const pad = CFG.padDeg;
+      const roomSpan = (360 - pad * n) / n;
+      let start = -90;
+      const segments = [];
+      rooms.forEach((room) => {
+        const a0 = start + pad / 2;
+        const a1 = start + roomSpan - pad / 2;
+        segments.push({ type: 'room', roomId: room.id, label: room.label, color: room.color, a0, a1, r0: CFG.rInner, r1: CFG.rRoom, room });
+        const innerSpan = a1 - a0;
+        const itemSlot = innerSpan / room.items.length;
+        room.items.forEach((item, idx) => {
+          const ia0 = a0 + idx * itemSlot + pad / 3;
+          const ia1 = a0 + (idx + 1) * itemSlot - pad / 3;
+          segments.push({ type: 'item', roomId: room.id, itemId: item.id, label: item.label, detail: item.detail, color: room.colorLight, a0: ia0, a1: ia1, r0: CFG.rRoom + 2, r1: CFG.rOuter, room, item });
+        });
+        start += roomSpan;
+      });
+      return segments;
+    }
+
+    function buildItemOnlySegments(room) {
+      const n = room.items.length;
+      const pad = CFG.padDeg;
+      const span = (360 - pad * n) / n;
+      let start = -90;
+      return room.items.map((item) => {
+        const a0 = start + pad / 2;
+        const a1 = start + span - pad / 2;
+        start += span;
+        return { type: 'item', roomId: room.id, itemId: item.id, label: item.label, detail: item.detail, color: room.color, a0, a1, r0: CFG.rInner, r1: CFG.rOuter, room, item };
+      });
+    }
+
+    function createSvg() {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', `0 0 ${CFG.size} ${CFG.size}`);
+      return svg;
+    }
+
+    function addSegmentPath(svg, seg, onClick) {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', arcPath(CFG.cx, CFG.cy, seg.r0, seg.r1, seg.a0, seg.a1));
+      path.setAttribute('class', 'sunburst-seg');
+      path.setAttribute('fill', seg.color);
+      path.dataset.room = seg.roomId;
+      if (seg.itemId) path.dataset.item = seg.itemId;
+      path.dataset.type = seg.type;
+      if (onClick) {
+        path.addEventListener('click', () => onClick(seg));
+      }
+      svg.appendChild(path);
+      return path;
+    }
+
+  const CONCEPTS = [
+    {
+      tab: '1 · Drill-down',
+      out: '<strong>Try it:</strong> Tap a room wedge → chart becomes items. Tap an item → copy in center. Tap <em>Home</em> to go back.',
+      mount(el) {
+        el.innerHTML = `
+          <span class="badge">Concept 1 · live</span>
+          <h2>Drill-down sunburst</h2>
+          <p class="hint">Tap a room, then tap an item slice. Copy appears in the center.</p>
+          <div class="breadcrumb" id="c1-crumb"></div>
+          <div class="panel">
+            <div class="chart-wrap" id="c1-chart"></div>
+            <div class="hub-copy" id="c1-hub"></div>
+          </div>
+          <p class="pros"><span>Try:</span> Kitchen → Non-stick pans → Home</p>`;
+
+        const chartEl = el.querySelector('#c1-chart');
+        const hubEl = el.querySelector('#c1-hub');
+        const crumbEl = el.querySelector('#c1-crumb');
+        let mode = 'rooms';
+        let currentRoom = null;
+        let selectedItem = null;
+        let paths = [];
+
+        function setHub(title, body) {
+          hubEl.innerHTML = `<h3>${title}</h3><p>${body}</p>`;
+        }
+
+        function render() {
+          const svg = createSvg();
+          paths = [];
+          if (mode === 'rooms') {
+            crumbEl.innerHTML = '<span>Home</span>';
+            const segs = buildRoomSegments(ROOMS).filter(s => s.type === 'room');
+            segs.forEach(seg => {
+              const p = addSegmentPath(svg, seg, (s) => {
+                mode = 'items';
+                currentRoom = s.room;
+                selectedItem = s.room.items[0];
+                render();
+              });
+              paths.push({ el: p, seg });
+            });
+            const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            c.setAttribute('cx', CFG.cx); c.setAttribute('cy', CFG.cy);
+            c.setAttribute('r', CFG.rInner - 2); c.setAttribute('class', 'center-hub');
+            svg.appendChild(c);
+            const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('x', CFG.cx); t.setAttribute('y', CFG.cy + 4);
+            t.setAttribute('class', 'center-sub'); t.textContent = 'Pick a room';
+            svg.appendChild(t);
+            setHub('Your home', 'Tap a room wedge to see its PFAS hotspots.');
+          } else {
+            crumbEl.innerHTML = `<button type="button" id="c1-back">Home</button> › ${currentRoom.label}`;
+            el.querySelector('#c1-back').onclick = () => {
+              mode = 'rooms'; currentRoom = null; selectedItem = null; render();
+            };
+            const segs = buildItemOnlySegments(currentRoom);
+            segs.forEach(seg => {
+              const p = addSegmentPath(svg, seg, (s) => {
+                selectedItem = s.item;
+                updateActive();
+                setHub(s.item.label, s.item.detail);
+              });
+              paths.push({ el: p, seg });
+            });
+            if (!selectedItem) selectedItem = currentRoom.items[0];
+            setHub(selectedItem.label, selectedItem.detail);
+            updateActive();
+          }
+          chartEl.innerHTML = '';
+          chartEl.appendChild(svg);
+        }
+
+        function updateActive() {
+          paths.forEach(({ el, seg }) => {
+            const active = seg.itemId === selectedItem?.id;
+            el.classList.toggle('is-active', active);
+            el.classList.toggle('is-dim', selectedItem && seg.itemId !== selectedItem.id);
+          });
+        }
+
+        render();
+      }
+    },
+    {
+      tab: '2 · Callouts',
+      out: '<strong>Try it:</strong> Tap any wedge — room or item. A callout box appears on the chart with copy. Tap another slice to switch.',
+      mount(el) {
+        el.innerHTML = `
+          <span class="badge">Concept 2 · live</span>
+          <h2>Leader-line callouts</h2>
+          <p class="hint">Tap any slice. Copy floats on the diagram.</p>
+          <div class="panel" style="position:relative; min-height:280px;">
+            <div class="chart-wrap" id="c2-chart" style="position:relative; z-index:1;"></div>
+            <div id="c2-callout" class="callout-box" style="position:absolute; display:none;"></div>
+            <svg id="c2-leader" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;" viewBox="0 0 280 280"></svg>
+          </div>
+          <p class="pros"><span>Try:</span> Tap Bathroom (room) then Dental floss (outer)</p>`;
+
+        const chartEl = el.querySelector('#c2-chart');
+        const calloutEl = el.querySelector('#c2-callout');
+        const leaderEl = el.querySelector('#c2-leader');
+        const panel = chartEl.parentElement;
+        let selected = null;
+        const segs = buildRoomSegments(ROOMS);
+        const paths = [];
+
+        const svg = createSvg();
+        segs.forEach(seg => {
+          const p = addSegmentPath(svg, seg, (s) => {
+            selected = s;
+            update();
+          });
+          paths.push({ el: p, seg });
+        });
+        chartEl.appendChild(svg);
+
+        function update() {
+          paths.forEach(({ el, seg }) => {
+            const active = selected && seg.roomId === selected.roomId &&
+              (seg.type === selected.type) &&
+              (seg.type === 'room' || seg.itemId === selected.itemId);
+            el.classList.toggle('is-active', active);
+            el.classList.toggle('is-dim', selected && !active);
+          });
+
+          if (!selected) {
+            calloutEl.style.display = 'none';
+            leaderEl.innerHTML = '';
+            return;
+          }
+
+          const mid = midAngle(selected.a0, selected.a1);
+          const r = (selected.r0 + selected.r1) / 2;
+          const pt = polar(CFG.cx, CFG.cy, r, mid);
+          const title = selected.type === 'room' ? selected.label : selected.label;
+          const body = selected.type === 'room'
+            ? `${selected.room.items.length} hotspots — tap an outer slice for detail.`
+            : selected.detail;
+
+          calloutEl.innerHTML = `<strong>${title}</strong>${body}`;
+          calloutEl.style.display = 'block';
+
+          const panelW = panel.offsetWidth;
+          const scale = panelW / CFG.size;
+          const px = pt.x * scale;
+          const py = pt.y * scale;
+          const boxW = Math.min(panelW * 0.42, 150);
+          let left = mid > -90 && mid < 90 ? px + 12 : px - boxW - 12;
+          let top = py - 30;
+          left = Math.max(4, Math.min(left, panelW - boxW - 4));
+          top = Math.max(4, Math.min(top, 240));
+          calloutEl.style.left = left + 'px';
+          calloutEl.style.top = top + 'px';
+          calloutEl.style.maxWidth = boxW + 'px';
+
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', pt.x);
+          line.setAttribute('y1', pt.y);
+          const tipX = (left + boxW / 2) / scale;
+          const tipY = (top + 20) / scale;
+          line.setAttribute('x2', tipX);
+          line.setAttribute('y2', tipY);
+          line.setAttribute('stroke', '#a89f92');
+          line.setAttribute('stroke-width', '1');
+          leaderEl.innerHTML = '';
+          leaderEl.appendChild(line);
+        }
+
+        update();
+      }
+    },
+    {
+      tab: '3 · List drives',
+      out: '<strong>Try it:</strong> Chart is not clickable. Expand a room, tap an item button — chart highlights your pick.',
+      mount(el) {
+        el.innerHTML = `
+          <span class="badge">Concept 3 · live</span>
+          <h2>List drives, chart mirrors</h2>
+          <p class="hint">Expand rooms and tap item buttons below.</p>
+          <div class="panel" style="padding-bottom:0.25rem;">
+            <div class="chart-wrap" id="c3-chart"></div>
+            <p class="passive-note">Chart mirrors your taps below ↑</p>
+          </div>
+          <div class="panel" style="padding:0.35rem 0.5rem;" id="c3-list"></div>
+          <p class="pros"><span>Try:</span> Open Bathroom → tap Dental floss</p>`;
+
+        const chartEl = el.querySelector('#c3-chart');
+        const listEl = el.querySelector('#c3-list');
+        let expanded = 'bathroom';
+        let selected = { roomId: 'bathroom', itemId: 'floss' };
+        const segs = buildRoomSegments(ROOMS);
+        const paths = [];
+
+        const svg = createSvg();
+        segs.forEach(seg => {
+          const p = addSegmentPath(svg, seg, null);
+          p.classList.add('no-pointer');
+          paths.push({ el: p, seg });
+        });
+        chartEl.appendChild(svg);
+
+        function renderList() {
+          listEl.innerHTML = ROOMS.map(room => `
+            <div class="accordion-item">
+              <div class="acc-head" data-room="${room.id}">
+                <span class="acc-dot" style="background:${room.color}"></span>
+                ${room.label}
+                <span class="acc-chevron">${expanded === room.id ? '▾' : '▸'}</span>
+              </div>
+              ${expanded === room.id ? `<div class="acc-body">
+                ${room.items.map(it => `
+                  <button type="button" class="acc-chip ${selected.roomId === room.id && selected.itemId === it.id ? 'sel' : ''}"
+                    style="--c:${room.color}" data-room="${room.id}" data-item="${it.id}">
+                    ${it.label}<small>${it.detail}</small>
+                  </button>`).join('')}
+              </div>` : ''}
+            </div>`).join('');
+
+          listEl.querySelectorAll('.acc-head').forEach(h => {
+            h.onclick = () => {
+              expanded = expanded === h.dataset.room ? null : h.dataset.room;
+              renderList();
+            };
+          });
+          listEl.querySelectorAll('.acc-chip').forEach(btn => {
+            btn.onclick = () => {
+              selected = { roomId: btn.dataset.room, itemId: btn.dataset.item };
+              renderList();
+              updateChart();
+            };
+          });
+        }
+
+        function updateChart() {
+          paths.forEach(({ el, seg }) => {
+            const roomMatch = seg.roomId === selected.roomId;
+            const itemMatch = seg.type === 'item' && seg.itemId === selected.itemId;
+            el.classList.toggle('is-active', itemMatch);
+            el.classList.toggle('is-dim', !roomMatch || (seg.type === 'item' && !itemMatch));
+          });
+        }
+
+        renderList();
+        updateChart();
+      }
+    },
+    {
+      tab: '4 · Two-step strip',
+      out: '<strong>Try it:</strong> Tap a room pill → use Prev/Next to browse items with full copy. No chart tapping needed.',
+      mount(el) {
+        el.innerHTML = `
+          <span class="badge">Concept 4 · live</span>
+          <h2>Two-step strip</h2>
+          <p class="hint">Pick a room, then browse items with arrows.</p>
+          <div class="step-bar" id="c4-steps"></div>
+          <div class="panel">
+            <div class="room-pills" id="c4-pills"></div>
+            <div id="c4-card"></div>
+            <div class="item-nav">
+              <button type="button" id="c4-prev">← Prev</button>
+              <span id="c4-counter"></span>
+              <button type="button" id="c4-next">Next →</button>
+            </div>
+          </div>
+          <div class="panel" style="padding:0.35rem;">
+            <div class="chart-wrap small" id="c4-chart"></div>
+          </div>
+          <p class="pros"><span>Try:</span> Kitchen pill → Next through items</p>`;
+
+        let roomId = 'kitchen';
+        let itemIdx = 0;
+        const stepsEl = el.querySelector('#c4-steps');
+        const pillsEl = el.querySelector('#c4-pills');
+        const cardEl = el.querySelector('#c4-card');
+        const chartEl = el.querySelector('#c4-chart');
+
+        function room() { return ROOMS.find(r => r.id === roomId); }
+
+        function render() {
+          const r = room();
+          const item = r.items[itemIdx];
+          stepsEl.innerHTML = `
+            <div class="step-pill done">1 · Room ✓</div>
+            <div class="step-pill current">2 · Item</div>`;
+          pillsEl.innerHTML = ROOMS.map(ro => `
+            <button type="button" class="room-pill ${ro.id === roomId ? 'sel' : ''}"
+              style="${ro.id === roomId ? `background:${ro.color}` : ''}" data-id="${ro.id}">
+              ${ro.label}
+            </button>`).join('');
+          cardEl.innerHTML = `
+            <div class="item-card" style="border-left-color:${r.color}">
+              <strong>${item.label}</strong>
+              <p>${item.detail}</p>
+            </div>`;
+          el.querySelector('#c4-counter').textContent = `${itemIdx + 1} of ${r.items.length}`;
+          pillsEl.querySelectorAll('.room-pill').forEach(p => {
+            p.onclick = () => { roomId = p.dataset.id; itemIdx = 0; render(); };
+          });
+          el.querySelector('#c4-prev').onclick = () => {
+            itemIdx = (itemIdx - 1 + r.items.length) % r.items.length;
+            render();
+          };
+          el.querySelector('#c4-next').onclick = () => {
+            itemIdx = (itemIdx + 1) % r.items.length;
+            render();
+          };
+
+          chartEl.innerHTML = '';
+          const svg = createSvg();
+          const segs = buildItemOnlySegments(r);
+          segs.forEach(seg => {
+            const p = addSegmentPath(svg, seg, null);
+            p.classList.add('no-pointer');
+            p.classList.toggle('is-active', seg.itemId === item.id);
+            p.classList.toggle('is-dim', seg.itemId !== item.id);
+          });
+          chartEl.appendChild(svg);
+        }
+        render();
+      }
+    },
+    {
+      tab: '5 · Hub + labels',
+      out: '<strong>Try it:</strong> Tap a room → outer ring pulses. Tap an outer slice → copy fills the center hub. Labels always on outer ring.',
+      mount(el) {
+        el.innerHTML = `
+          <span class="badge">Concept 5 · live</span>
+          <h2>Labels on chart + hub copy</h2>
+          <p class="hint">Outer labels always visible. Tap slices to read in center.</p>
+          <div class="panel">
+            <div class="chart-wrap" id="c5-chart"></div>
+            <div class="pulse-hint" id="c5-pulse"><span class="pulse-ring"></span> Tap an outer slice</div>
+            <div class="hub-copy" id="c5-hub"></div>
+          </div>
+          <p class="pros"><span>Try:</span> Tap Kitchen → then Tap water</p>`;
+
+        const chartEl = el.querySelector('#c5-chart');
+        const hubEl = el.querySelector('#c5-hub');
+        const pulseEl = el.querySelector('#c5-pulse');
+        let selectedRoom = null;
+        let selectedItem = null;
+        const segs = buildRoomSegments(ROOMS);
+        const paths = [];
+
+        const svg = createSvg();
+        const gLabels = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+        const labelMap = {};
+        segs.forEach(seg => {
+          if (seg.type === 'item') {
+            const mid = midAngle(seg.a0, seg.a1);
+            const r = (seg.r0 + seg.r1) / 2;
+            const pt = polar(CFG.cx, CFG.cy, r, mid);
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', pt.x);
+            text.setAttribute('y', pt.y);
+            text.setAttribute('class', 'outer-label');
+            text.setAttribute('data-item', seg.itemId);
+            text.setAttribute('transform', `rotate(${mid}, ${pt.x}, ${pt.y})`);
+            const short = seg.label.length > 10 ? seg.label.slice(0, 8) + '…' : seg.label;
+            text.textContent = short;
+            gLabels.appendChild(text);
+            labelMap[seg.itemId] = text;
+          }
+          const p = addSegmentPath(svg, seg, (s) => {
+            if (s.type === 'room') {
+              selectedRoom = s.roomId;
+              selectedItem = null;
+            } else {
+              selectedRoom = s.roomId;
+              selectedItem = s.itemId;
+            }
+            update();
+          });
+          paths.push({ el: p, seg, label: seg.itemId ? labelMap[seg.itemId] : null });
+        });
+
+        const centerG = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const hubCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        hubCircle.setAttribute('cx', CFG.cx); hubCircle.setAttribute('cy', CFG.cy);
+        hubCircle.setAttribute('r', CFG.rInner - 2); hubCircle.setAttribute('class', 'center-hub');
+        centerG.appendChild(hubCircle);
+        const hubTitle = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        hubTitle.setAttribute('x', CFG.cx); hubTitle.setAttribute('y', CFG.cy - 8);
+        hubTitle.setAttribute('class', 'hub-detail-title'); hubTitle.id = 'c5-hub-title';
+        centerG.appendChild(hubTitle);
+        const hubBody = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        hubBody.setAttribute('x', CFG.cx); hubBody.setAttribute('y', CFG.cy + 2);
+        hubBody.setAttribute('class', 'hub-detail-body'); hubBody.id = 'c5-hub-body';
+        centerG.appendChild(hubBody);
+
+        svg.appendChild(gLabels);
+        svg.appendChild(centerG);
+        chartEl.appendChild(svg);
+
+        function wrapSvgText(textEl, lines, startY) {
+          textEl.innerHTML = '';
+          lines.forEach((line, i) => {
+            const t = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            t.setAttribute('x', CFG.cx);
+            t.setAttribute('dy', i === 0 ? 0 : '1.2em');
+            if (i === 0) t.setAttribute('y', startY);
+            t.textContent = line;
+            textEl.appendChild(t);
+          });
+        }
+
+        function update() {
+          paths.forEach(({ el, seg, label }) => {
+            const roomMatch = selectedRoom && seg.roomId === selectedRoom;
+            const itemActive = selectedItem && seg.type === 'item' && seg.itemId === selectedItem;
+            const roomActive = !selectedItem && seg.type === 'room' && seg.roomId === selectedRoom;
+            el.classList.toggle('is-active', itemActive || roomActive);
+            el.classList.toggle('is-dim', selectedRoom && seg.roomId !== selectedRoom);
+            if (label) {
+              label.classList.toggle('is-active', itemActive);
+              label.classList.toggle('is-dim', selectedRoom && seg.roomId !== selectedRoom && !itemActive);
+            }
+          });
+
+          pulseEl.classList.toggle('hidden', selectedItem != null);
+
+          const titleEl = svg.querySelector('#c5-hub-title');
+          const bodyEl = svg.querySelector('#c5-hub-body');
+          if (!selectedRoom) {
+            wrapSvgText(titleEl, ['your'], CFG.cy - 4);
+            wrapSvgText(bodyEl, ['home'], CFG.cy + 6);
+          } else if (!selectedItem) {
+            const r = ROOMS.find(ro => ro.id === selectedRoom);
+            wrapSvgText(titleEl, [r.label], CFG.cy - 6);
+            wrapSvgText(bodyEl, ['Tap outer slice'], CFG.cy + 4);
+          } else {
+            const r = ROOMS.find(ro => ro.id === selectedRoom);
+            const it = r.items.find(i => i.id === selectedItem);
+            wrapSvgText(titleEl, [it.label], CFG.cy - 10);
+            const words = it.detail.split(' ');
+            const line1 = words.slice(0, 5).join(' ');
+            const line2 = words.slice(5).join(' ') || '';
+            wrapSvgText(bodyEl, line2 ? [line1, line2] : [line1], CFG.cy);
+          }
+        }
+
+        update();
+      }
+    }
+  ];
+
+    const tabsEl = document.getElementById('tabs');
+    const conceptsEl = document.getElementById('concepts');
+    const outEl = document.getElementById('out-label');
+    const mounted = new Set();
+
+    CONCEPTS.forEach((c, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = c.tab;
+      btn.type = 'button';
+      if (i === 0) btn.classList.add('active');
+      btn.addEventListener('click', () => show(i));
+      tabsEl.appendChild(btn);
+
+      const div = document.createElement('div');
+      div.className = 'concept' + (i === 0 ? ' active' : '');
+      div.id = 'concept-' + i;
+      conceptsEl.appendChild(div);
+    });
+
+    function show(i) {
+      tabsEl.querySelectorAll('button').forEach((b, j) => b.classList.toggle('active', j === i));
+      conceptsEl.querySelectorAll('.concept').forEach((d, j) => d.classList.toggle('active', j === i));
+      outEl.innerHTML = CONCEPTS[i].out;
+      if (!mounted.has(i)) {
+        CONCEPTS[i].mount(document.getElementById('concept-' + i));
+        mounted.add(i);
+      }
+    }
+    show(0);
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Where PFAS hide at home—and what to swap first. Room-by-room hotspots, ranked swaps, and product picks. No signup.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#f6f3eb">
+  <meta name="color-scheme" content="light">
+  <title>PFAS Home Guide — Where PFAS Hide at Home & What to Swap First</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="view-home" class="view active">
+      <header class="home-header">
+        <div class="home-masthead">
+          <h1 class="home-title">PFAS Home Guide</h1>
+          <p class="home-masthead-line">Where PFAS hide at home—and what to swap first</p>
+        </div>
+        <div class="stat-carousel" id="stat-carousel" aria-live="polite">
+          <div class="stat-track" id="stat-track"></div>
+          <div class="stat-dots" id="stat-dots"></div>
+        </div>
+      </header>
+
+      <div class="home-body">
+        <div class="section-block">
+          <h2>Swap these first</h2>
+          <p class="section-hint">Highest PFAS exposure — daily food, water, and direct contact.</p>
+          <div id="priority-strip" class="priority-strip"></div>
+          <div id="priority-more" class="priority-more"></div>
+          <div id="exposure-legend" class="exposure-legend"></div>
+        </div>
+
+        <div class="section-block">
+          <h2>All hotspots by room</h2>
+          <p class="section-hint">Items are sorted by exposure level within each room.</p>
+          <div id="hotspot-list" class="hotspot-list-panel"></div>
+        </div>
+
+        <div class="home-cta">
+          <button class="btn btn-primary btn-block" data-nav="swaps">Top swaps to make first</button>
+          <button class="btn btn-ghost btn-block" data-nav="shop">Browse all products</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-swaps" class="view">
+      <div class="view-pad" id="swaps-content"></div>
+    </section>
+
+    <section id="view-hotspot" class="view">
+      <div class="view-pad" id="hotspot-content"></div>
+    </section>
+
+    <section id="view-shop" class="view">
+      <div class="view-pad">
+        <div class="view-top">
+          <h2>All swaps</h2>
+          <p>PFA-free picks · Amazon links</p>
+        </div>
+        <div id="shop-container"></div>
+        <p class="fine-print">May earn from qualifying purchases. Verify labels before buying.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tab-bar" id="tab-bar">
+    <button class="tab active" data-nav="home" aria-label="Home">
+      <span class="tab-icon">◯</span><span>Home</span>
+    </button>
+    <button class="tab" data-nav="swaps" aria-label="Top swaps">
+      <span class="tab-icon">↑</span><span>Swaps</span>
+    </button>
+    <button class="tab" data-nav="shop" aria-label="Shop">
+      <span class="tab-icon">⌂</span><span>Shop</span>
+    </button>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

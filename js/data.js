@@ -1,4 +1,4 @@
-const AMAZON_AFFILIATE_TAG = 'YOURTAG-20';
+const AMAZON_AFFILIATE_TAG = 'pfashomeguide-20';
 
 /** Shown on the About page — set a real email before applying to Amazon Associates. */
 const SITE_CONTACT_EMAIL = 'pfashomeguide@gmail.com';
@@ -73,8 +73,8 @@ const REVOLVING_STATS = [
     url: 'https://www.frontiersin.org/journals/toxicology/articles/10.3389/ftox.2023.1280543/full',
   },
   {
-    value: 'Dementia',
-    label: 'greater plastic particle buildup found in brains with dementia vs. healthy brains',
+    value: 'Microplastics',
+    label: 'higher levels in brains with dementia than in brains without',
     source: 'Nature Medicine 2025',
     url: 'https://www.nature.com/articles/s41591-024-03453-1',
   },
@@ -82,7 +82,7 @@ const REVOLVING_STATS = [
     value: 'Years',
     label: 'PFAS stay in your body — exposure today adds to what\'s already there',
     source: 'EPA PFAS overview',
-    url: 'https://www.epa.gov/sdwa/and-polyfluoroalkyl-substances-pfas',
+    url: 'https://www.epa.gov/pfas/pfas-explained',
   },
 ];
 

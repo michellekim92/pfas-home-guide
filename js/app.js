@@ -127,14 +127,29 @@
     const preview = all.slice(0, HOME_SWAP_PREVIEW);
 
     el.innerHTML = preview.map(({ room, item }) => priorityChipHtml(room, item)).join('');
+
+    const locked = all.slice(preview.length, preview.length + 2);
+    if (locked.length) {
+      el.innerHTML += locked.map(({ room, item }) => `
+        <div class="priority-chip priority-chip-locked" aria-hidden="true">
+          <span class="priority-chip-room">${esc(room.label)}</span>
+          <span class="priority-chip-label">${esc(item.label)}</span>
+          <span class="priority-lock">${esc(SUBSCRIPTION.lockedLabel)}</span>
+        </div>`).join('');
+    }
+
     bindPriorityChips(el);
 
     if (moreEl) {
       if (all.length > preview.length) {
         moreEl.innerHTML = `
-          <button type="button" class="priority-see-all" data-nav="swaps">
-            See top 20 swaps →
+          <button type="button" class="priority-see-all priority-see-all-locked" id="btn-unlock-swaps">
+            ${esc(SUBSCRIPTION.unlockLabel)}
           </button>`;
+        document.getElementById('btn-unlock-swaps')?.addEventListener('click', () => {
+          document.getElementById('btn-subscribe')?.focus();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
       } else {
         moreEl.innerHTML = '';
       }
@@ -315,6 +330,25 @@
       </section>`).join('');
   }
 
+  function initSubscription() {
+    const sub = SUBSCRIPTION;
+    const setText = (id, text) => {
+      const el = document.getElementById(id);
+      if (el && text) el.textContent = text;
+    };
+    setText('member-pill', sub.memberPill);
+    setText('sanctuary-sub', sub.subline);
+    setText('subscribe-note', sub.note);
+    setText('btn-subscribe', sub.cta);
+    setText('btn-subscribe-footer', sub.cta);
+
+    function onSubscribeClick() {
+      navigate('swaps');
+    }
+    document.getElementById('btn-subscribe')?.addEventListener('click', onSubscribeClick);
+    document.getElementById('btn-subscribe-footer')?.addEventListener('click', onSubscribeClick);
+  }
+
   function initSiteLegal() {
     const footerAmazon = document.getElementById('footer-amazon-disclosure');
     const footerHealth = document.getElementById('footer-health-disclaimer');
@@ -367,6 +401,7 @@
     if (!opened) window.location.assign(href);
   });
 
+  initSubscription();
   initSiteLegal();
   initHome();
   renderShop();

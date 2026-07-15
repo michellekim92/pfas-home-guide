@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Where PFAS hide at home—and what to swap first. Room-by-room hotspots, ranked swaps, and product picks. No signup.">
+  <meta name="description" content="Reduce PFAS exposure at home. Ranked swaps, room-by-room hotspots, and vetted product picks. Start a 7-day free trial.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="theme-color" content="#f6f3eb">
+  <meta name="theme-color" content="#f8f5ee">
   <meta name="color-scheme" content="light">
   <title>PFAS Home Guide — Where PFAS Hide at Home & What to Swap First</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +19,7 @@
   <nav class="tab-bar" id="tab-bar" aria-label="Site navigation">
     <div class="sidebar-brand">
       <p class="sidebar-brand-title">PFAS Home Guide</p>
-      <p class="sidebar-brand-line">Where PFAS hide at home—and what to swap first</p>
+      <p class="sidebar-brand-line">Ranked swaps · Room-by-room hotspots</p>
     </div>
     <div class="tab-list">
       <button class="tab active" data-nav="home" aria-label="Home">
@@ -37,35 +37,48 @@
   <div class="site-main">
   <main id="app">
     <section id="view-home" class="view active">
-      <header class="home-header">
-        <div class="home-masthead">
-          <h1 class="home-title">PFAS Home Guide</h1>
-          <p class="home-masthead-line">Where PFAS hide at home—and what to swap first</p>
+      <header class="home-header sanctuary-header">
+        <p class="member-pill" id="member-pill">Premium household guide</p>
+        <div class="sanctuary-hero">
+          <div class="stat-carousel" id="stat-carousel" aria-live="polite">
+            <div class="stat-track" id="stat-track"></div>
+            <div class="stat-dots" id="stat-dots"></div>
+          </div>
         </div>
-        <div class="stat-carousel" id="stat-carousel" aria-live="polite">
-          <div class="stat-track" id="stat-track"></div>
-          <div class="stat-dots" id="stat-dots"></div>
+        <h1 class="sanctuary-title">PFAS Home Guide</h1>
+        <p class="sanctuary-sub" id="sanctuary-sub"></p>
+        <div class="sanctuary-tiles">
+          <div class="sanctuary-tile">
+            <strong>Top 20 swaps</strong>
+            <span>Impact-ordered</span>
+          </div>
+          <div class="sanctuary-tile">
+            <strong>Product guide</strong>
+            <span>Verified picks</span>
+          </div>
         </div>
+        <button type="button" class="btn btn-subscribe btn-block" id="btn-subscribe">Try 7 days free</button>
+        <p class="subscribe-note" id="subscribe-note"></p>
       </header>
 
       <div class="home-body">
-        <div class="section-block">
-          <h2>Swap these first</h2>
-          <p class="section-hint">Highest PFAS exposure — daily food, water, and direct contact.</p>
+        <div class="section-block sanctuary-card">
+          <h2>Today's focus</h2>
+          <p class="section-hint">Preview · highest PFAS exposure routes. Unlock the full ranked list with membership.</p>
           <div id="priority-strip" class="priority-strip"></div>
           <div id="priority-more" class="priority-more"></div>
           <div id="exposure-legend" class="exposure-legend"></div>
         </div>
 
-        <div class="section-block">
+        <div class="section-block sanctuary-card">
           <h2>All hotspots by room</h2>
           <p class="section-hint">Items are sorted by exposure level within each room.</p>
           <div id="hotspot-list" class="hotspot-list-panel"></div>
         </div>
 
         <div class="home-cta">
-          <button class="btn btn-primary btn-block" data-nav="swaps">Top swaps to make first</button>
-          <button class="btn btn-ghost btn-block" data-nav="shop">Browse all products</button>
+          <button class="btn btn-subscribe btn-block" id="btn-subscribe-footer">Try 7 days free</button>
+          <button class="btn btn-ghost btn-block" data-nav="swaps">Preview ranked swaps</button>
         </div>
       </div>
     </section>
@@ -96,8 +109,8 @@
           <p>What this guide is and how to use it</p>
         </div>
         <div class="legal-body">
-          <p><strong>PFAS Home Guide</strong> is a free reference for finding where PFAS (“forever chemicals”) commonly show up at home and which everyday product swaps may reduce exposure.</p>
-          <p>Content is organized by room, ranked by likely exposure, and paired with practical alternatives. Product links point to Amazon when we have a specific pick; we do not sell products directly and do not require signup.</p>
+          <p><strong>PFAS Home Guide</strong> is a membership guide for finding where PFAS (“forever chemicals”) show up at home and which product swaps reduce exposure first.</p>
+          <p>Members get the full ranked swap list, room-by-room hotspot library, and vetted Amazon product picks. Content is organized by exposure level—not fear.</p>
           <p>Picks favor publicly marketed PFA-free or lower-PFAS options, but labels change. Always verify current product claims before you buy.</p>
           <p id="about-contact-wrap"><strong>Contact:</strong> <span id="about-contact">—</span></p>
         </div>

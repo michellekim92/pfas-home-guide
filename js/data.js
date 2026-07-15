@@ -8,6 +8,16 @@ const AMAZON_DISCLOSURE = 'As an Amazon Associate I earn from qualifying purchas
 const HEALTH_DISCLAIMER =
   'Educational information only—not medical advice. PFAS exposure varies by person and product. Verify labels and consult a qualified professional for personal health decisions.';
 
+/** Membership copy — wire to Stripe / App Store when ready */
+const SUBSCRIPTION = {
+  memberPill: 'Premium household guide',
+  subline: 'Calm, clear, prioritized — the swaps that matter before the ones that can wait.',
+  cta: 'Try 7 days free',
+  note: 'Then $4.99/mo · Cancel anytime',
+  unlockLabel: 'Unlock full ranked list →',
+  lockedLabel: 'Members',
+};
+
 const IMG_FALLBACK_PRODUCT = 'images/product-placeholder.svg';
 
 function amazonAffiliateTag() {
@@ -432,7 +442,7 @@ function getAllHotspotEntries() {
   );
 }
 
-const HOME_SWAP_PREVIEW = 5;
+const HOME_SWAP_PREVIEW = 3;
 const SWAPS_LIST_LIMIT = 20;
 
 function getRankedExposureEntries(limit = SWAPS_LIST_LIMIT) {

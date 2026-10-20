@@ -639,6 +639,30 @@ const HOTSPOT_ROOMS = [
   },
 ];
 
+/* ── Prices ─────────────────────────────────────────────────
+   Amazon allows prices on an associate's site only when they come from
+   Amazon (an Amazon-served link or the Creators API). Until this site has
+   Creators API access, Amazon picks carry a price TIER, never a number, and
+   the card links to today's price. Brand-site (directUrl) picks keep their
+   real price — Amazon's rule does not cover them.
+   ──────────────────────────────────────────────────────────── */
+
+const PRICE_TIERS = {
+  '$': 'under $25',
+  '$$': '$25–60',
+  '$$$': 'over $60',
+};
+
+const PRICE_TIER_NOTE = '$ under $25 · $$ $25–60 · $$$ over $60. Amazon prices change daily — each link shows today’s.';
+
+/**
+ * Deal-season tag on `dealPick` items. It claims no price or discount —
+ * only that the item is worth buying when it is on sale — and it switches
+ * itself off after `end`, because Amazon requires limited-time promotion
+ * references to come down when the promotion ends.
+ */
+const DEAL_WINDOW = { start: '2026-11-20', end: '2026-12-01', label: 'Worth buying on sale' };
+
 /* ── Products ──────────────────────────────────────────────────
    Built 2026-10-19 from pfaswap-product-inventory (v22, Google Sheet
    copy, ASIN Check tab — every Amazon listing click-checked by Michelle).
@@ -658,7 +682,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'ZeroWater Ready-Read pitcher or dispenser (10- to 52-cup)',
-        asin: 'B0073PZ6O0', price: '$28.99–$53.99', verified: true, pick: 'value',
+        asin: 'B0073PZ6O0', priceTier: '$$', verified: true, dealPick: true, pick: 'value',
         tier: 'A', evidence: 'certified',
         why: 'IAPMO-certified to NSF/ANSI 53 for PFOA and PFOS, in the cheapest format in the category — no install, no plumbing.',
         shortfallNote: 'Certified for PFOA and PFOS — two compounds — not the seven-compound Total PFAS claim.',
@@ -667,7 +691,7 @@ const PRODUCTS = {
       },
       {
         name: 'everydrop Refrigerator Filter 3 (EDR3RXD1)',
-        asin: 'B00UB441HS', price: '$49.98', verified: true,
+        asin: 'B00UB441HS', priceTier: '$$', verified: true,
         tier: 'A', evidence: 'certified',
         why: 'NSF/ANSI 53 certified for PFOA and PFOS. If your household drinks from the fridge dispenser, this changes the route you actually use without buying an appliance.',
         shortfallNote: 'PFOA/PFOS only, and it filters the fridge line — not your tap.',
@@ -676,7 +700,7 @@ const PRODUCTS = {
       },
       {
         name: 'AquaTru Classic countertop reverse osmosis',
-        asin: 'B0F2GS6P8B', price: '$495', verified: true, pick: 'balance',
+        asin: 'B0F2GS6P8B', priceTier: '$$$', verified: true, dealPick: true, pick: 'balance',
         tier: 'A', evidence: 'certified',
         why: 'IAPMO-certified to NSF/ANSI 53 for PFOA/PFOS (models AT100–AT140). Countertop reverse osmosis with no plumbing — the most practical certified option for renters.',
         shortfallNote: 'Certified for PFOA/PFOS, not Total PFAS. The listing says it "removes PFAS"; the certificate is narrower than that.',
@@ -709,7 +733,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Lodge Pre-Seasoned Cast Iron Skillet, 10.25"',
-        asin: 'B00006JSUA', price: '$24.90', verified: true, pick: 'value',
+        asin: 'B00006JSUA', priceTier: '$', verified: true, dealPick: true, pick: 'value',
         tier: 'A', evidence: 'inherent',
         why: 'The non-stick surface is polymerised vegetable oil on bare iron — no fluoropolymer to scratch, overheat or degrade.',
         lifespan: 'Decades',
@@ -717,7 +741,7 @@ const PRODUCTS = {
       },
       {
         name: 'Lodge Pre-Seasoned Cast Iron Skillet, 12"',
-        asin: 'B00006JSUB', price: '$29.90', verified: true,
+        asin: 'B00006JSUB', priceTier: '$$', verified: true,
         tier: 'A', evidence: 'inherent',
         why: 'The same bare cast iron at the size most households use as their main pan.',
         lifespan: 'Decades',
@@ -725,7 +749,7 @@ const PRODUCTS = {
       },
       {
         name: 'Lodge Cast Iron 5-Piece Set',
-        asin: 'B004QM8SLG', price: '$99.90', verified: true,
+        asin: 'B004QM8SLG', priceTier: '$$$', verified: true,
         tier: 'A', evidence: 'inherent',
         why: 'Replaces a whole scratched non-stick set in one purchase.',
         lifespan: 'Decades',
@@ -733,7 +757,7 @@ const PRODUCTS = {
       },
       {
         name: 'Tramontina Signature Tri-Ply Stainless 12" Fry Pan',
-        asin: 'B01M7T40KR', price: '$54.95', verified: true, pick: 'balance',
+        asin: 'B01M7T40KR', priceTier: '$$', verified: true, dealPick: true, pick: 'balance',
         tier: 'A', evidence: 'inherent',
         why: 'Bare stainless has no coating, so the PTFE route does not exist — at about a third of the price of the premium brands.',
         lifespan: 'Lifetime',
@@ -741,11 +765,11 @@ const PRODUCTS = {
       },
       {
         name: 'All-Clad D3 Stainless 12" Fry Pan with Lid',
-        asin: 'B00FUF5K8W', price: '$149.95', verified: true,
+        asin: 'B00FUF5K8W', priceTier: '$$$', verified: true, dealPick: true,
         tier: 'A', evidence: 'inherent',
         why: 'The pan that won America’s Test Kitchen’s 12-inch stainless test — and currently cheaper with the lid than without.',
         lifespan: 'Lifetime',
-        tradeoff: 'The extra money buys durability and a better handle, not a safer pan. On PFAS it is identical to the $55 one.',
+        tradeoff: 'The extra money buys durability and a better handle, not a safer pan. On PFAS it is identical to the Tramontina, at about three times the price.',
       },
     ],
   },
@@ -756,7 +780,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Pyrex Simply Store Glass Containers, 3-pack',
-        asin: 'B0000BYCGF', price: '$17.80', verified: true, pick: 'value',
+        asin: 'B0000BYCGF', priceTier: '$', verified: true, dealPick: true, pick: 'value',
         tier: 'A', evidence: 'inherent',
         why: 'Plain tempered glass, so you can reheat leftovers without heating plastic against food.',
         shortfallNote: 'The lids are plastic. Microwave the glass base only — take the lid off first.',
@@ -765,7 +789,7 @@ const PRODUCTS = {
       },
       {
         name: 'U-Konserve Stainless Round Nesting Containers, Trio',
-        asin: 'B088VFW31R', price: '$29.99', verified: true,
+        asin: 'B088VFW31R', priceTier: '$$', verified: true,
         tier: 'A', evidence: 'inherent',
         why: 'Bare stainless with no liner — nothing coated touches the food.',
         lifespan: 'Years',
@@ -773,7 +797,7 @@ const PRODUCTS = {
       },
       {
         name: 'U-Konserve Nesting Trio Bento Box, 15/30/50 oz',
-        asin: 'B0DBSMHP3B', price: '$41.99', verified: true,
+        asin: 'B0DBSMHP3B', priceTier: '$$', verified: true,
         tier: 'A', evidence: 'inherent',
         why: 'The rectangular version of the same bare-stainless set.',
         lifespan: 'Years',
@@ -781,7 +805,7 @@ const PRODUCTS = {
       },
       {
         name: 'ECOlunchbox Three-in-One Stainless Bento Box, 31 oz',
-        asin: 'B0040MH642', price: '$38.00', verified: true,
+        asin: 'B0040MH642', priceTier: '$$', verified: true,
         tier: 'B', evidence: 'inherent',
         why: 'Stainless steel throughout, so no coated or lined surface touches food.',
         shortfallNote: 'Not leakproof. The silicone parts carry the same limit as any silicone: no published fluorine testing.',
@@ -790,7 +814,7 @@ const PRODUCTS = {
       },
       {
         name: 'Stasher Reusable Silicone Bags, 4-pack',
-        asin: 'B087XBR564', price: '$46.96', verified: true,
+        asin: 'B087XBR564', priceTier: '$$', verified: true,
         tier: 'B', evidence: 'inherent',
         why: 'Platinum-cure silicone has no fluorine in it, and replaces cling film and zip bags.',
         shortfallNote: 'Silicone is not a PFAS and there is no coating to treat. But "food-grade silicone" is not a certification, and we found no published fluorine testing. The honest claim is "no coating to worry about", not "verified PFAS-free".',
@@ -806,7 +830,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Thermos Stainless King Vacuum Bottle, 24 oz',
-        asin: 'B01DZQSWQ4', price: '$29.99', verified: true, pick: 'value',
+        asin: 'B01DZQSWQ4', priceTier: '$$', verified: true, dealPick: true, pick: 'value',
         tier: 'A', evidence: 'inherent',
         why: 'Thermos says it plainly: its stainless products "have no interior coating". Bare steel needs no lining, so there is no epoxy and no bisphenol.',
         lifespan: 'Years',
@@ -814,7 +838,7 @@ const PRODUCTS = {
       },
       {
         name: 'Klean Kanteen TKWide Insulated Bottle, 32 oz',
-        asin: 'B08SG8Y979', price: '$46.95', verified: true,
+        asin: 'B08SG8Y979', priceTier: '$$', verified: true,
         tier: 'A', evidence: 'inherent',
         why: 'Klean Kanteen states "no plastic or epoxy linings are necessary". Its coloured Klean Coat is on the outside only.',
         lifespan: 'Years',
@@ -822,7 +846,7 @@ const PRODUCTS = {
       },
       {
         name: 'SodaStream Fizz & Go Cool stainless carbonating bottle',
-        asin: 'B0DG32QBJN', price: '$23.49', verified: true, pick: 'evidence',
+        asin: 'B0DG32QBJN', priceTier: '$', verified: true, pick: 'evidence',
         tier: 'A', evidence: 'inherent',
         why: 'Food-grade stainless with no interior lining, and a pressure-rated carbonating bottle — unlike plastic, it carries no expiry date.',
         shortfallNote: 'Fits TERRA, E-TERRA, ART, DUO, E-DUO and ENSO only — not AQUA FIZZ, GAIA, FIZZI or any screw-in-cylinder machine. Check the listing says Fizz & Go Cool and names your machine.',
@@ -831,7 +855,7 @@ const PRODUCTS = {
       },
       {
         name: 'SodaStream Glass Carafe, 2-pack (Aqua Fizz, Penguin, Crystal)',
-        asin: 'B0055R2CKO', price: '$35.25', verified: true,
+        asin: 'B0055R2CKO', priceTier: '$$', verified: true,
         tier: 'B', evidence: 'inherent',
         why: 'Glass needs no lining, and carries no date stamp the way plastic carbonating bottles do.',
         shortfallNote: 'Only for machines that enclose the glass while carbonating — never a plastic-bottle machine. The Aqua Fizz is no longer sold on SodaStream’s US site, so this is for existing owners. Replace a carafe if it chips.',
@@ -847,7 +871,7 @@ const PRODUCTS = {
     items: [
       {
         name: "Tom's of Maine Naturally Waxed Antiplaque Flat Floss",
-        asin: 'B000YE01QA', price: '$7.99', verified: true, pick: 'value',
+        asin: 'B000YE01QA', priceTier: '$', verified: true, dealPick: true, pick: 'value',
         tier: 'B', evidence: 'tested',
         why: 'Tested clean. A waxed flat floss with no PTFE strand — and the cheapest clean result.',
         lifespan: '32 yards',
@@ -855,7 +879,7 @@ const PRODUCTS = {
       },
       {
         name: 'Cocofloss Expanding Woven Dental Floss',
-        asin: 'B082BF4TYW', price: '$9.99', verified: true,
+        asin: 'B082BF4TYW', priceTier: '$', verified: true,
         tier: 'B', evidence: 'tested',
         why: 'Tested clean. A coconut-wax woven strand that cleans more aggressively than flat floss.',
         lifespan: 'Single spool',
@@ -863,7 +887,7 @@ const PRODUCTS = {
       },
       {
         name: 'Boka Ela Mint Expanding Waxed Floss',
-        asin: 'B083JNXZGR', price: '$8.99', verified: true,
+        asin: 'B083JNXZGR', priceTier: '$', verified: true,
         tier: 'B', evidence: 'tested',
         why: 'Tested clean, and the closest feel to Glide for anyone switching away from it.',
         lifespan: '27 yards',
@@ -878,7 +902,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'LunchBots Medium Trio Stainless Bento Box, 32 oz',
-        asin: 'B07983JCXB', price: '$39.99', verified: true, pick: 'value',
+        asin: 'B07983JCXB', priceTier: '$$', verified: true, pick: 'value',
         tier: 'A', evidence: 'inherent',
         why: 'Uncoated stainless replaces grease-resistant takeout containers and moulded-fibre bowls — the packaging with the highest fluorine readings in Consumer Reports’ 2022 test.',
         lifespan: 'Years',
@@ -886,7 +910,7 @@ const PRODUCTS = {
       },
       {
         name: "Bee's Wrap Beeswax Food Wraps, 3-pack",
-        asin: 'B0126LMDFK', price: '$19.00', verified: true,
+        asin: 'B0126LMDFK', priceTier: '$', verified: true, dealPick: true,
         tier: 'B', evidence: 'inherent',
         why: 'Cotton, beeswax, jojoba oil and tree resin — a grease barrier made from wax rather than fluorochemistry.',
         shortfallNote: 'This swaps out the wrap in your own kitchen. It does nothing about the fast-food wrapper, which is the actual hotspot — that one is a habit, not a purchase.',
@@ -895,7 +919,7 @@ const PRODUCTS = {
       },
       {
         name: 'If You Care Unbleached Parchment Baking Paper, 70 sq ft',
-        asin: 'B001T6JTMY', price: '$5.59', verified: true,
+        asin: 'B001T6JTMY', priceTier: '$', verified: true,
         tier: 'C', evidence: 'tested',
         why: 'Silicone-coated rather than fluorochemical-coated, and independent screening found no fluorine above 10 ppm — where Reynolds and Kirkland showed about 12–14 ppm.',
         shortfallNote: 'No parchment on the US market is certified PFAS-free, and If You Care doesn’t claim to be. The screening lab is not named, and a 10 ppm floor is not zero. For certainty, use a bare stainless sheet or a silicone baking mat.',
@@ -911,7 +935,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Original Whirley Pop Popcorn Maker, 6 Qt (stainless, metal gears)',
-        asin: 'B01D321B4A', price: '$67.99', verified: true, pick: 'value',
+        asin: 'B01D321B4A', priceTier: '$$$', verified: true, dealPick: true, pick: 'value',
         tier: 'A', evidence: 'inherent',
         why: 'Replaces the grease-proofed microwave bag outright with an uncoated stainless pot.',
         shortfallNote: 'Only the stainless, metal-gear version qualifies. The same listing also offers aluminium and nylon-gear versions — choose stainless.',
@@ -927,7 +951,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Smart Air Sqair H13 HEPA + Activated Carbon',
-        asin: 'B0DKX733RM', price: '$178.99', verified: true, pick: 'evidence',
+        asin: 'B0DKX733RM', priceTier: '$$$', verified: true, dealPick: true, pick: 'evidence',
         tier: 'B', evidence: 'stated',
         why: 'The only purifier brand we found that publishes what its HEPA media is made of — polypropylene and PET, which rules out a PTFE membrane.',
         shortfallNote: 'A materials disclosure, not a PFAS-free certification. It catches PFAS riding on dust, not gas-phase PFAS, and does not replace getting stain-treated carpet out of the house.',
@@ -936,7 +960,7 @@ const PRODUCTS = {
       },
       {
         name: 'Coway Airmega AP-1512HH Mighty (black)',
-        asin: 'B00BTKAPUU', price: '$202.12', verified: true, pick: 'value',
+        asin: 'B00BTKAPUU', priceTier: '$$$', verified: true, pick: 'value',
         tier: 'C', evidence: 'unverified',
         why: 'Well-established true-HEPA capture of house dust, independently rated for clean-air delivery. The black version is the same machine as the white for less.',
         shortfallNote: 'Listed for its performance, not for anything it claims about PFAS. Coway does not publish what its filter media is made of.',
@@ -952,7 +976,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Naturepedic Organic Waterproof Mattress Protector Pad',
-        asin: 'B00T0EM0IW', price: '$129.00', verified: true, pick: 'evidence',
+        asin: 'B00T0EM0IW', priceTier: '$$$', verified: true, dealPick: true, pick: 'evidence',
         tier: 'A', evidence: 'certified',
         why: 'Waterproofs with a physical membrane instead of a fluorinated finish, on GOTS-certified organic cotton.',
         lifespan: 'Years; machine washable',
@@ -960,7 +984,7 @@ const PRODUCTS = {
       },
       {
         name: 'Coyuchi Classic Organic Sateen Sheet Set, Undyed',
-        asin: 'B0F3Z6QL77', price: '$148.00', verified: true, pick: 'balance',
+        asin: 'B0F3Z6QL77', priceTier: '$$$', verified: true, dealPick: true, pick: 'balance',
         tier: 'A', evidence: 'certified',
         why: 'GOTS governs the finishing stage and bans fluorinated inputs, so no wrinkle- or stain-resistant finish can be applied.',
         lifespan: 'Years; softens with washing',
@@ -968,7 +992,7 @@ const PRODUCTS = {
       },
       {
         name: 'Naturepedic Organic Crib Mattress, 2-Stage',
-        asin: 'B083QP2JY7', price: '$299.00', verified: true,
+        asin: 'B083QP2JY7', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'certified',
         why: 'UL 2884 validated for non-detectable PFAS — under 50 ppm total fluorine across about 80 compounds, the only true "non-detectable PFAS" mark in bedding.',
         shortfallNote: 'The validation covers Naturepedic’s crib and kids mattresses only. Their adult line is not covered yet — don’t read the badge across the whole brand.',
@@ -977,7 +1001,7 @@ const PRODUCTS = {
       },
       {
         name: 'Avocado Eco Organic Latex Mattress Topper',
-        asin: 'B0H27N5M25', price: '$299.00', verified: true,
+        asin: 'B0H27N5M25', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'tested',
         why: 'Intertek tested Avocado’s components for 679 PFAS at a 10 ppb floor and found none — the strongest published test in this catalogue.',
         shortfallNote: 'A test result, not a certification — a snapshot of the components tested. This is the topper, not the mattress; the full mattress is sold direct.',
@@ -1009,16 +1033,16 @@ const PRODUCTS = {
       },
       {
         name: "Maggie's Organics Organic Cotton Boxer Briefs, 2-pack (men's)",
-        asin: 'B09Z5RYLMJ', price: '$45', verified: true, pick: 'value',
+        asin: 'B09Z5RYLMJ', priceTier: '$$', verified: true, pick: 'value',
         tier: 'A', evidence: 'certified',
         why: 'GOTS certification bans fluorinated inputs at the finishing stage.',
         shortfallNote: 'The listing says 95% organic cotton and does not say what the other 5% is.',
         lifespan: 'Years',
-        tradeoff: '$30 for a single pair.',
+        tradeoff: 'Also sold as a single pair.',
       },
       {
         name: "Boody Seamfree Boxer Briefs (men's)",
-        asin: 'B0BJQKL2X2', price: '$22.95', verified: true,
+        asin: 'B0BJQKL2X2', priceTier: '$', verified: true,
         tier: 'A', evidence: 'certified',
         why: 'A true circular knit, so no bonded edges, and the softness and odour resistance come from the bamboo viscose fibre rather than an applied finish. Boody states its fabrics are made without added PFAS (August 2026) and holds OEKO-TEX STANDARD 100.',
         shortfallNote: 'Boody does not publish its OEKO-TEX certificate number, so the certification cannot be checked independently. We have asked them for it.',
@@ -1027,7 +1051,7 @@ const PRODUCTS = {
       },
       {
         name: "Boody Full Briefs, High-Rise (women's)",
-        asin: 'B07NHYP5WN', price: '$19.95', verified: true,
+        asin: 'B07NHYP5WN', priceTier: '$', verified: true, dealPick: true,
         tier: 'A', evidence: 'certified',
         why: 'The same bamboo-viscose knit and company statement as the men’s line, and the largest review base in the catalogue.',
         shortfallNote: 'Same limit as the men’s: no OEKO-TEX certificate number published. Sizes were limited when we checked — Boody’s Classic Bikini (B01N9I0O64) and Midi Brief (B07NHSTHRP) are the same fabric.',
@@ -1045,7 +1069,7 @@ const PRODUCTS = {
       },
       {
         name: "TomboyX Boy Short Underwear, Cotton Blend (women's)",
-        asin: 'B0DDWJCMFF', price: '$61.20', verified: true,
+        asin: 'B0DDWJCMFF', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'tested',
         why: 'Independent screening found no detectable organic fluorine.',
         shortfallNote: 'The non-detect result was on TomboyX’s leakproof styles, not everything they make, and the lab was not named.',
@@ -1097,7 +1121,7 @@ const PRODUCTS = {
       },
       {
         name: "Icebreaker Merino 175 Everyday Base Layer (women's)",
-        asin: 'B078WF8321', price: '$95', verified: true,
+        asin: 'B078WF8321', priceTier: '$$$', verified: true,
         tier: 'C', evidence: 'inherent',
         why: 'Merino resists odour by itself, so no chemical anti-odour finish is needed.',
         shortfallNote: 'Icebreaker publishes no PFAS statement or certification, and the fibre argument covers odour only — it says nothing about whether a wicking finish was applied. Choose it for the mechanism, not verified evidence.',
@@ -1122,7 +1146,7 @@ const PRODUCTS = {
       },
       {
         name: "Rab Downpour Waterproof Jacket (men's)",
-        asin: 'B0DLLQ1WLY', price: '$140', verified: true, pick: 'value',
+        asin: 'B0DLLQ1WLY', priceTier: '$$$', verified: true, dealPick: true, pick: 'value',
         tier: 'B', evidence: 'stated',
         why: 'Rab says it removed all intentionally added PFAS from its line for Autumn/Winter 2025, covering the shell and its water-repellent finish.',
         shortfallNote: 'The claim is brand-wide, not on the product page, and Rab says it cannot rule out traces. Avoid the older "Downpour Eco".',
@@ -1140,7 +1164,7 @@ const PRODUCTS = {
       },
       {
         name: "Arc'teryx Beta Jacket (men's, GORE-TEX ePE)",
-        asin: 'B0FX3GT869', price: '$400', verified: true,
+        asin: 'B0FX3GT869', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'stated',
         why: 'GORE-TEX ePE replaces the fluoropolymer membrane, paired with a fluorine-free water-repellent finish — Arc’teryx says "free from intentionally added PFAS".',
         shortfallNote: 'Older Beta stock uses the earlier PFAS membrane. This listing says GORE-TEX ePE — if you buy a different size or colour, check that it does too.',
@@ -1149,12 +1173,12 @@ const PRODUCTS = {
       },
       {
         name: 'Rains Long Jacket',
-        asin: 'B09V751CMZ', price: '$110.95', verified: true,
+        asin: 'B09V751CMZ', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'inherent',
         why: 'A polyurethane-coated shell keeps rain out by itself — no fluorinated finish and no membrane at all.',
         shortfallNote: 'A city raincoat, not a hiking shell: it barely breathes. Rains’ PFAS statement is undated and its lab is not named.',
         lifespan: 'Years',
-        tradeoff: 'Other colours cost more (about $140).',
+        tradeoff: 'Price varies by colour — check a few.',
       },
     ],
   },
@@ -1165,7 +1189,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'FitGlow Beauty Vegan Good Lash + Mascara',
-        asin: 'B0747X3SVG', price: '$38', verified: true, pick: 'evidence',
+        asin: 'B0747X3SVG', priceTier: '$$', verified: true, pick: 'evidence',
         tier: 'B', evidence: 'tested',
         why: 'Screened clean — and it first came back positive, traced to a pigment supplier swapped in without the brand knowing. It is non-detect after reformulation.',
         shortfallNote: 'The screening lab is not named, and FitGlow publishes no PFAS statement of its own.',
@@ -1174,7 +1198,7 @@ const PRODUCTS = {
       },
       {
         name: '100% PURE Ultra Lengthening Mascara',
-        asin: 'B003N4ST94', price: '$28', verified: true, pick: 'value',
+        asin: 'B003N4ST94', priceTier: '$$', verified: true, dealPick: true, pick: 'value',
         tier: 'B', evidence: 'tested',
         why: 'From the brand with the broadest clean sweep we found — six 100% Pure products, mascara included, screened non-detect.',
         shortfallNote: 'Screening evidence only, lab not named, and we have not confirmed this exact shade was among the products tested.',
@@ -1183,7 +1207,7 @@ const PRODUCTS = {
       },
       {
         name: '100% PURE Fruit Pigmented Powder Foundation',
-        asin: 'B01M8I6WYA', price: '$46', verified: true,
+        asin: 'B01M8I6WYA', priceTier: '$$', verified: true,
         tier: 'B', evidence: 'tested',
         why: 'The same brand-wide screening, in foundation — the other category where fluorine turned up most.',
         shortfallNote: 'Screening only, lab not named. Shade range on Amazon was limited when we checked.',
@@ -1199,7 +1223,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Branch Basics Concentrate + Oxygen Boost',
-        asin: 'B0D9WH1HYB', price: '$77', verified: true,
+        asin: 'B0D9WH1HYB', priceTier: '$$$', verified: true,
         tier: 'B', evidence: 'certified',
         why: 'The only double-certified cleaning brand we found — MADE SAFE and EWG VERIFIED, and EWG’s cleaning criteria ban PFAS as a class by name.',
         shortfallNote: 'Branch Basics makes no PFAS statement itself, and neither certification tests the finished product.',
@@ -1215,7 +1239,7 @@ const PRODUCTS = {
     items: [
       {
         name: 'Zojirushi Stainless Steel Mug SM-KHE48, 16 oz',
-        asin: 'B005PO9T44', price: '$39.99', verified: true, pick: 'evidence',
+        asin: 'B005PO9T44', priceTier: '$$', verified: true, dealPick: true, pick: 'evidence',
         tier: 'B', evidence: 'inherent',
         why: 'An electropolished bare-steel interior — Zojirushi says no nonstick coating — so nothing but steel touches the hot drink.',
         shortfallNote: 'Model SM-KHE only. Zojirushi’s SM-TA mug and SJ-JS bottle have a PTFE nonstick interior — the opposite of what you want.',
@@ -1224,7 +1248,7 @@ const PRODUCTS = {
       },
       {
         name: 'KeepCup Brew, 16 oz (glass)',
-        asin: 'B09JF3SBHC', price: '$32.95', verified: true, pick: 'value',
+        asin: 'B09JF3SBHC', priceTier: '$$', verified: true, dealPick: true, pick: 'value',
         tier: 'B', evidence: 'inherent',
         why: 'Tempered glass has no lining and no paper.',
         shortfallNote: 'No PFAS statement from KeepCup — the claim is the material.',

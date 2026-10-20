@@ -345,6 +345,30 @@
     return '<span class="pick-limit"><b>What this does not do</b> ' + esc(item.shortfallNote) + '</span>';
   }
 
+  /** A tier and a pointer to today's price for Amazon picks; the real price for brand-site picks. */
+  function priceHtml(item, asLink) {
+    if (item.priceTier) {
+      var today = asLink
+        ? '<a class="price-today" href="' + esc(amazonProductLink(item)) + '" target="_blank" rel="noopener noreferrer sponsored">Today’s price on Amazon ↗</a>'
+        : '<span class="price-today">Today’s price on Amazon ↗</span>';
+      return '<span class="price-tier" title="' + esc(PRICE_TIERS[item.priceTier] || '') + '">' + esc(item.priceTier) + '</span>' + today;
+    }
+    return esc(item.price || '—');
+  }
+
+  /** Local calendar date as YYYY-MM-DD, so the window turns over at the reader's midnight. */
+  function todayIso() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function dealTag(item) {
+    if (!item.dealPick || typeof DEAL_WINDOW === 'undefined') return '';
+    var t = todayIso();
+    if (t < DEAL_WINDOW.start || t > DEAL_WINDOW.end) return '';
+    return '<span class="pick-deal">' + esc(DEAL_WINDOW.label) + '</span>';
+  }
+
   function productCard(item) {
     var img = amazonImage(item);
     var isDirect = !!item.directUrl;
@@ -362,11 +386,12 @@
       thumb +
       '<span class="pick-body">' +
       (item.pick ? '<span class="pick-tag">' + esc(PICK_LABELS[item.pick] || '') + '</span>' : '') +
+      dealTag(item) +
       '<span class="pick-name">' + esc(item.name) + '</span>' +
       '<span class="pick-why">' + esc(item.why || item.desc || '') + '</span>' +
       limitLine(item) +
       '</span>' +
-      '<span class="pick-price">' + esc(item.price || '') + '</span>' +
+      '<span class="pick-price">' + priceHtml(item) + '</span>' +
       '</span>' +
       '<span class="pick-facts">' +
       evidenceMeter(item.evidence) +
@@ -387,10 +412,18 @@
 
   var sortBy = {};   // { categoryKey: 'editorial' | 'price' | 'evidence' }
 
+  /**
+   * Sort key for "Lowest price". Amazon picks only have a tier, so every
+   * pick is compared by tier band; within a band, a brand-site pick's real
+   * price breaks the tie.
+   */
   function priceNumber(item) {
+    var band = { '$': 1, '$$': 2, '$$$': 3 };
+    if (item.priceTier) return band[item.priceTier] * 1e6;
     if (!item.price) return Infinity;
     var n = parseFloat(String(item.price).replace(/[^0-9.]/g, ''));
-    return isNaN(n) ? Infinity : n;
+    if (isNaN(n)) return Infinity;
+    return (n < 25 ? 1 : n <= 60 ? 2 : 3) * 1e6 + n;
   }
 
   function sortedItems(cat, key) {
@@ -434,6 +467,7 @@
       return '<tr>' +
         '<td data-label="Product">' +
           (item.pick ? '<span class="c-tag">' + esc(PICK_LABELS[item.pick] || '') + '</span>' : '') +
+          dealTag(item) +
           '<a class="c-name" href="' + esc(amazonProductLink(item)) + '"' +
           ' target="_blank" rel="' + rel + '">' + esc(item.name) +
           '<span class="c-go" aria-hidden="true"> ↗</span></a>' +
@@ -448,7 +482,7 @@
           esc(t.label) + ', ' + t.rank + ' of 4">' + barsFor(t.rank) + '</span>' +
           '<span class="c-ev">' + esc(t.label) + '</span>' +
         '</span></td>' +
-        '<td data-label="Price" class="c-price">' + esc(item.price || '—') + '</td>' +
+        '<td data-label="Price" class="c-price">' + priceHtml(item, true) + '</td>' +
         '<td data-label="Lasts" class="c-lasts">' + esc(item.lifespan || '—') + '</td>' +
         '<td data-label="Trade-off" class="c-trade">' + esc(item.tradeoff || '—') + '</td>' +
         '</tr>';
@@ -496,10 +530,12 @@
    */
   function productSection(cat, key) {
     var head = cat.note ? '<p class="cat-note">' + esc(cat.note) + '</p>' : '';
+    var foot = cat.items.some(function (i) { return i.priceTier; })
+      ? '<p class="price-key">' + esc(PRICE_TIER_NOTE) + '</p>' : '';
     if (cat.items.length < 2) {
-      return head + '<div class="picks">' + cat.items.map(productCard).join('') + '</div>';
+      return head + '<div class="picks">' + cat.items.map(productCard).join('') + '</div>' + foot;
     }
-    return head + comparisonTable(cat, key || cat.title);
+    return head + comparisonTable(cat, key || cat.title) + foot;
   }
 
   var PROVISIONAL_NOTE =

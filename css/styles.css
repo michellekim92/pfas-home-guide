@@ -989,6 +989,42 @@ a.rung:hover { background: var(--surface); }
   padding: 0.12rem 0.32rem;
 }
 
+.price-tier {
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+}
+.price-today {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--util);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--pine);
+  white-space: nowrap;
+}
+.pick-deal {
+  display: block;
+  width: fit-content;
+  margin: 0 0 0.3rem;
+  padding: 0.12rem 0.4rem;
+  font-family: var(--util);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pine);
+  border: 1px solid var(--pine);
+}
+.price-key {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  max-width: var(--measure);
+}
+
 .pick-limit {
   display: block;
   margin-top: 0.4rem;

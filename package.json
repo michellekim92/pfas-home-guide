@@ -1,0 +1,9 @@
+{
+  "name": "pfas-home-guide",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "micro": "^10.0.1",
+    "stripe": "^17.7.0"
+  }
+}

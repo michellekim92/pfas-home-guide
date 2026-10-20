@@ -2,3 +2,9 @@
 *.log
 .env
 .env.*
+!.env.example
+
+# Never publish: research, drafts and dependencies
+node_modules/
+inventory/
+Claude outputs/

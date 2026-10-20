@@ -52,6 +52,61 @@ In the Vercel project → **Settings → Domains**, add e.g. `pfashomeguide.com`
 
 Enable **Settings → Pages → Deploy from branch → `main` / root** if you prefer GitHub hosting instead of Vercel.
 
+## Stripe membership
+
+Monthly subscription with **7-day free trial** via Stripe Checkout.
+
+### 1. Install Stripe CLI and log in
+
+```bash
+brew install stripe/stripe-cli/stripe
+stripe login
+```
+
+Or download the CLI from [github.com/stripe/stripe-cli/releases](https://github.com/stripe/stripe-cli/releases).
+
+### 2. Create product + price
+
+```bash
+chmod +x scripts/setup-stripe.sh
+./scripts/setup-stripe.sh
+```
+
+This prints a `STRIPE_PRICE_ID` to add in Vercel.
+
+### 3. Add environment variables in Vercel
+
+Project → **Settings** → **Environment Variables**:
+
+| Variable | Where to get it |
+|----------|-----------------|
+| `STRIPE_SECRET_KEY` | [dashboard.stripe.com/apikeys](https://dashboard.stripe.com/apikeys) |
+| `STRIPE_PRICE_ID` | Output of `setup-stripe.sh` |
+| `STRIPE_TRIAL_DAYS` | `7` (optional) |
+| `SITE_URL` | Your live Vercel URL |
+
+Redeploy after saving.
+
+### 4. Local API testing (optional)
+
+```bash
+npm install
+npx vercel dev
+```
+
+In another terminal:
+
+```bash
+stripe listen --forward-to localhost:3000/api/stripe-webhook
+```
+
+Copy the `whsec_...` secret to `STRIPE_WEBHOOK_SECRET` in Vercel for production webhooks.
+
+### API routes
+
+- `POST /api/create-checkout-session` — starts Stripe Checkout
+- `POST /api/stripe-webhook` — subscription events (production)
+
 ## Before Amazon Associates review
 
 In `js/data.js`, set:
